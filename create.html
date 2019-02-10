@@ -13,12 +13,13 @@
 </head>
 
 <body>
-    
+
     <div class="studio-wrap">
-            <div id="save-popup">
-                <div class="text" max-le>Upload flip note!</div>
-                    <input type="text" placeholder="Title" id="upload-input">
-                </div>
+        <div id="save-popup">
+            <div class="text" max-le>Upload flip note!</div>
+            <input type="text" maxlength="32" placeholder="Title" id="upload-input">
+            <button class="upload-button">Upload!</button>
+        </div>
         <div id="canvas-background"></div>
         <div id="canvas-hold"></div>
         <div class="colors" id="colors"></div>
@@ -31,13 +32,12 @@
             <button onclick="shift_frame(1)" title="Next frame [ARROW RIGHT]"><img src="img/icons/arrow_right.png" alt=""
                     class="icon"></button>
         </div>
+
         <div class="studio-buttons">
             <button onclick="toggle_brush()" title="Change brush size"><img src="img/icons/pen.png" alt="" id="brush"
                     class="icon"></button>
             <button onclick="new_frame()" title="Insert new frame [N]"><img src="img/icons/add.png" alt="" class="icon"></button>
             <button onclick="delete_frame()" title="Delete frame [DEL]"><img src="img/icons/remove.png" alt="" class="icon"></button>
-
-
             <button onclick="copy()" title="Copy frame [C]"><img src="img/icons/copy.png" alt="" class="icon"></button>
 
             <button onclick="paste()" title="Paste frame (and insert new frame) [V]"><img src="img/icons/paste.png" alt=""
@@ -53,7 +53,6 @@
         </div>
 
     </div>
-
 
     <script src="js/creator.js"></script>
     <script src="js/main.js"></script>

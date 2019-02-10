@@ -12,6 +12,8 @@ var do_ghost = true;
 var playing = false;
 var play_interval;
 var speed;
+var upload_open = false;
+var uploading = false;
 var copy_canvas = 0;
 
 var canvas_arr = []
@@ -54,6 +56,10 @@ function copy(){
 function paste(){
     new_frame();
     ctx.drawImage(copy_canvas, 0, 0);
+}
+
+function validate(el){
+    el.value = el.value.replace(/[^A-z0-9_]+/gi, "");
 }
 
 function toggle_brush(){
@@ -149,6 +155,27 @@ canvas_bg.addEventListener("mousemove", e => {
     if (mouse.down)  draw();
 })
 
+
+
+function upload(){
+    if(uploading) return;
+    if(document.getElementById("save-popup").style.transform == "scale(1)") document.getElementById("save-popup").style.transform = "scale(0)";
+    else document.getElementById("save-popup").style.transform = "scale(1)";
+}
+
+document.addEventListener("click", e => {
+    if(uploading) return;
+    var found = false;
+    for(el of e.path){
+        if(el.id == "save-popup" || el.id == "upload"){
+            found = true;
+        }
+    }
+    if(!found) document.getElementById("save-popup").style.transform = "scale(0)";
+    
+})
+
+
 canvas_bg.addEventListener("mousedown", e => {
     mouse.down = true;
     draw();
@@ -166,8 +193,14 @@ document.addEventListener("keyup", e => {
     if(e.keyCode == 32) e.preventDefault();
 }) 
 
+function dont_shortcut(){
+    if(document.activeElement.nodeName == "INPUT") return true;
+    return false;
+}
+
+
 document.addEventListener("keypress", e => {
-    console.log(e.keyCode)
+    if(dont_shortcut()) return;
     switch(e.keyCode){
         case 32:
             play()
@@ -185,6 +218,7 @@ document.addEventListener("keypress", e => {
 })
 
 window.onkeydown = function() {
+    if(dont_shortcut()) return;
     var key = event.keyCode || event.charCode;
     if( key == 8 || key == 46 ){
         delete_frame();
