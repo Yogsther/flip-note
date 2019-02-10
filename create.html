@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,31 +11,52 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
     <title>Creator</title>
 </head>
+
 <body>
     
     <div class="studio-wrap">
+            <div id="save-popup">
+                <div class="text" max-le>Upload flip note!</div>
+                    <input type="text" placeholder="Title" id="upload-input">
+                </div>
         <div id="canvas-background"></div>
-        <div id="canvas-hold">
-
-
-        </div>
-        <!-- <canvas id="ghost-canvas" width="768" height="576"></canvas>
-        <canvas id="canvas" width="768" height="576"></canvas> -->
+        <div id="canvas-hold"></div>
         <div class="colors" id="colors"></div>
-        <div class="studio-buttons">
-            <button onclick="new_frame()">New Frame</button>
-            <button onclick="delete_frame()">Delete frame</button>
-            <span id="frame-status">Frame: 1 / 1</span>
-            <br>
-            <button onclick="shift_frame(-1)"><</button><button onclick="play()">Play / Stop</button><button onclick="shift_frame(1)">></button>
-            <br><button onclick="toggle_ghost()">Toggle ghost</button>
-            <input type="number" placeholder="fps" oninput="update_speed()" id="fps" value="12">
+        <div class="playback">
+            <span id="frame-status">1 / 1</span>
+            <button onclick="shift_frame(-1)" title="Past frame [ARROW LEFT]"><img src="img/icons/arrow_left.png" alt=""
+                    class="icon"></button>
+            <button onclick="play()" title="Play [SPACEBAR]"><img src="img/icons/play.png" id="play-image" class="icon"
+                    alt=""></button>
+            <button onclick="shift_frame(1)" title="Next frame [ARROW RIGHT]"><img src="img/icons/arrow_right.png" alt=""
+                    class="icon"></button>
         </div>
-        
+        <div class="studio-buttons">
+            <button onclick="toggle_brush()" title="Change brush size"><img src="img/icons/pen.png" alt="" id="brush"
+                    class="icon"></button>
+            <button onclick="new_frame()" title="Insert new frame [N]"><img src="img/icons/add.png" alt="" class="icon"></button>
+            <button onclick="delete_frame()" title="Delete frame [DEL]"><img src="img/icons/remove.png" alt="" class="icon"></button>
+
+
+            <button onclick="copy()" title="Copy frame [C]"><img src="img/icons/copy.png" alt="" class="icon"></button>
+
+            <button onclick="paste()" title="Paste frame (and insert new frame) [V]"><img src="img/icons/paste.png" alt=""
+                    class="icon"></button>
+
+            <button onclick="toggle_ghost()" title="Toggle ghost (See through image of past frame)"><img src="img/icons/ghost_1.png"
+                    id="ghost-img" alt="" class="icon"></button>
+            <span class="title">FPS: </span> <input type="number" placeholder="fps" oninput="update_speed()" id="fps"
+                value="12">
+
+            <button onclick="upload()" id="upload" title="Upload flip note to the site!"><img src="img/icons/save.png"
+                    alt="" class="icon"></button>
+        </div>
+
     </div>
-   
+
 
     <script src="js/creator.js"></script>
     <script src="js/main.js"></script>
 </body>
+
 </html>

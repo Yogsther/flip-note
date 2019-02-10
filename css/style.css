@@ -1,9 +1,9 @@
-body{
+body {
     background: #111;
     margin: 0;
 }
 
-*{
+* {
     font-family: 'Roboto', sans-serif;
     user-select: none;
 }
@@ -11,7 +11,7 @@ body{
 
 /* Login page */
 
-.login-window{
+.login-window {
     height: 450px;
     width: 400px;
     border-radius: 0px;
@@ -26,11 +26,12 @@ body{
     transition: all .1s;
 }
 
-.login-window:hover{
-    outline: solid 5px rgb(228, 76, 76);;
+.login-window:hover {
+    outline: solid 5px rgb(228, 76, 76);
+    ;
 }
 
-.login-title{
+.login-title {
     font-size: 40px;
     text-align: center;
     display: block;
@@ -38,7 +39,7 @@ body{
     position: relative;
 }
 
-.login-input{
+.login-input {
     display: block;
     padding: 5%;
     margin: 5%;
@@ -53,11 +54,11 @@ body{
     font-size: 16px;
 }
 
-.btn{
+.btn {
     width: 200px;
     height: 60px;
     border: none;
-    background:  rgb(228, 76, 76);
+    background: rgb(228, 76, 76);
     font-size: 16px;
     display: block;
     position: relative;
@@ -66,17 +67,17 @@ body{
     transition: all .1s;
 }
 
-.btn:hover{
+.btn:hover {
     transform: scale(1.1);
 }
 
-.login-button{
+.login-button {
     margin: 0 auto;
     top: 70px;
     font-size: 20px;
 }
 
-.status{
+.status {
     color: rgb(255, 189, 47);
     display: block;
     margin: 0 auto;
@@ -85,21 +86,23 @@ body{
     position: relative;
 }
 
-canvas{
+canvas {
     margin: 0 auto;
     display: block;
     position: absolute;
     pointer-events: none;
-    top: 25px;
+    top: 8.2px;
+    zoom: 3;
+    image-rendering: pixelated;
 }
 
-#ghost-canvas{
+#ghost-canvas {
     position: absolute;
     top: 25px;
     opacity: .5;
 }
 
-#canvas-background{
+#canvas-background {
     position: absolute;
     top: 25px;
     width: 100%;
@@ -107,7 +110,7 @@ canvas{
     background: white;
 }
 
-.studio-wrap{
+.studio-wrap {
     width: 768px;
     display: block;
     position: relative;
@@ -115,41 +118,156 @@ canvas{
 
 }
 
-.colors{
+.colors {
     display: block;
     width: 100%;
     position: relative;
     top: 630px;
 }
 
-.color{
+.color {
     width: 50px;
     height: 50px;
     margin-right: 10px;
     background: blue;
     display: inline-block;
-    transition: all .1s;
+    transition: all .05s;
     cursor: pointer;
     outline: 0px solid white;
 }
 
-.color:hover{
-    transform: scale(1.2);
+.color:hover {
+    transform: scale(1.1);
 }
-.color:active{
+
+.color:active {
     transform: scale(.95);
 }
 
-.studio-buttons{
+.studio-buttons {
     position: relative;
+    color: white;
     top: 650px;
 }
 
-.studio-buttons > button{
+.title{
+    position: relative;
+    top: -18px;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+.studio-buttons>button {
     cursor: pointer;
     min-width: 50px;
 }
 
-#frame-status{
+#frame-status {
     color: white;
+    font-size: 20px;
+    text-align: right;
+    display: inline-block;
+    left: -10px;
+    top: -15px;
+    position: relative;
+}
+
+button {
+    height: 50px;
+    width: 50px;
+    position: relative;
+    border: none;
+    margin-right: 5px;
+    background: rgb(41, 41, 41);
+    cursor: pointer;
+    border-radius: 5px;
+    transition: all .01s;
+}
+
+button:focus {
+    outline: 0;
+}
+
+button:hover {
+    transform: scale(1.1);
+}
+
+button:active {
+    transform: scale(0.95);
+}
+
+img {
+    user-drag: none;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+
+.icon {
+    position: absolute;
+    left: 5px;
+    top: 5px;
+    height: 40px;
+    transition: all .1s;
+    transform: scale(.9);
+}
+
+.playback {
+    float: right;
+    top: 576px;
+    position: relative;
+}
+
+#fps {
+    height: 45px;
+    width: 50px;
+    border-radius: 5px;
+    padding-left: 10px;
+    top: -20px;
+    font-size: 16px;
+    position: relative;
+    border: none;
+    text-align: center;
+}
+
+#upload{
+    display: inline-block;
+    position: absolute;
+    right: 0px;
+}
+
+#save-popup{
+    border-radius: 5px;
+    position: absolute;
+    z-index: 100;
+    left: 184px;
+    top: 100px;
+    width: 400px;
+    height: 300px;
+    background: rgb(22, 22, 22);
+    transition: all .2s;
+    transform: scale(1);
+    visibility: hidden;
+}
+
+.text{
+    color: white;
+    font-size: 40px;
+    text-align: center;
+    top: 40px;
+    position: relative;
+}
+
+#upload-input{
+    border: none;
+    top: 85px;
+    left: 5%;
+    font-size: 20px;
+    position: relative;
+    padding: 2.5%;
+    width: 85%;
+    height: 40px;
+    border-radius: 5px;
 }
