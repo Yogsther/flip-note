@@ -1,0 +1,155 @@
+body{
+    background: #111;
+    margin: 0;
+}
+
+*{
+    font-family: 'Roboto', sans-serif;
+    user-select: none;
+}
+
+
+/* Login page */
+
+.login-window{
+    height: 450px;
+    width: 400px;
+    border-radius: 0px;
+    background: rgb(31, 31, 31);
+    display: block;
+    position: relative;
+    margin: 0 auto;
+    top: 10vw;
+    color: rgb(228, 76, 76);
+    max-width: 95%;
+    outline: solid 0px rgb(228, 76, 76);
+    transition: all .1s;
+}
+
+.login-window:hover{
+    outline: solid 5px rgb(228, 76, 76);;
+}
+
+.login-title{
+    font-size: 40px;
+    text-align: center;
+    display: block;
+    top: 40px;
+    position: relative;
+}
+
+.login-input{
+    display: block;
+    padding: 5%;
+    margin: 5%;
+    border: none;
+    width: 80%;
+    position: relative;
+    top: 60px;
+    border-radius: 5px;
+    color: white;
+    background: none;
+    text-align: center;
+    font-size: 16px;
+}
+
+.btn{
+    width: 200px;
+    height: 60px;
+    border: none;
+    background:  rgb(228, 76, 76);
+    font-size: 16px;
+    display: block;
+    position: relative;
+    border-radius: 0px;
+    cursor: pointer;
+    transition: all .1s;
+}
+
+.btn:hover{
+    transform: scale(1.1);
+}
+
+.login-button{
+    margin: 0 auto;
+    top: 70px;
+    font-size: 20px;
+}
+
+.status{
+    color: rgb(255, 189, 47);
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+    top: 105px;
+    position: relative;
+}
+
+canvas{
+    margin: 0 auto;
+    display: block;
+    position: absolute;
+    pointer-events: none;
+    top: 25px;
+}
+
+#ghost-canvas{
+    position: absolute;
+    top: 25px;
+    opacity: .5;
+}
+
+#canvas-background{
+    position: absolute;
+    top: 25px;
+    width: 100%;
+    height: 576px;
+    background: white;
+}
+
+.studio-wrap{
+    width: 768px;
+    display: block;
+    position: relative;
+    margin: 0 auto;
+
+}
+
+.colors{
+    display: block;
+    width: 100%;
+    position: relative;
+    top: 630px;
+}
+
+.color{
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+    background: blue;
+    display: inline-block;
+    transition: all .1s;
+    cursor: pointer;
+    outline: 0px solid white;
+}
+
+.color:hover{
+    transform: scale(1.2);
+}
+.color:active{
+    transform: scale(.95);
+}
+
+.studio-buttons{
+    position: relative;
+    top: 650px;
+}
+
+.studio-buttons > button{
+    cursor: pointer;
+    min-width: 50px;
+}
+
+#frame-status{
+    color: white;
+}

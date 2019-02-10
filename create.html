@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css?family=Pacifico|Roboto+Mono" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
+    <title>Creator</title>
+</head>
+<body>
+    
+    <div class="studio-wrap">
+        <div id="canvas-background"></div>
+        <div id="canvas-hold">
+
+
+        </div>
+        <!-- <canvas id="ghost-canvas" width="768" height="576"></canvas>
+        <canvas id="canvas" width="768" height="576"></canvas> -->
+        <div class="colors" id="colors"></div>
+        <div class="studio-buttons">
+            <button onclick="new_frame()">New Frame</button>
+            <button onclick="delete_frame()">Delete frame</button>
+            <span id="frame-status">Frame: 1 / 1</span>
+            <br>
+            <button onclick="shift_frame(-1)"><</button><button onclick="play()">Play / Stop</button><button onclick="shift_frame(1)">></button>
+            <br><button onclick="toggle_ghost()">Toggle ghost</button>
+            <input type="number" placeholder="fps" oninput="update_speed()" id="fps" value="12">
+        </div>
+        
+    </div>
+   
+
+    <script src="js/creator.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
