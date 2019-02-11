@@ -1,0 +1,11 @@
+canvas {
+    margin: 0 auto;
+    display: block;
+    position: absolute;
+    pointer-events: none;
+    top: 8.2px;
+    zoom: 3;
+    image-rendering: pixelated;
+    user-select: none;
+    user-drag: none;
+}

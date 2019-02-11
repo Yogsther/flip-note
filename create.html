@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css?family=Pacifico|Roboto+Mono" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link rel="stylesheet" href="css/create.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
     <title>Creator</title>
 </head>
@@ -18,7 +19,8 @@
         <div id="save-popup">
             <div class="text" max-le>Upload flip note!</div>
             <input type="text" maxlength="32" placeholder="Title" id="upload-input">
-            <button class="upload-button">Upload!</button>
+            <button class="upload-button" onclick="upload_to_server()">Upload!</button>
+            <span id="status" class="upload-status"></span>
         </div>
         <div id="canvas-background"></div>
         <div id="canvas-hold"></div>
@@ -54,8 +56,9 @@
 
     </div>
 
-    <script src="js/creator.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/creator.js"></script>
+    
 </body>
 
 </html>

@@ -1,5 +1,6 @@
-var socket = io.connect("localhost:3939");
+var socket = io.connect("nut.livfor.it:2008");
 var loc = window.location.href.split("/").pop();
+var token = localStorage.getItem("token");
 
 function at(name) {
     if (name == "index" && loc == "") return true;
@@ -11,6 +12,12 @@ if (localStorage.getItem("token")) {
     socket.emit("login", {
         token_login: true,
         token: localStorage.getItem("token")
+    })
+}
+
+if(at("index")){
+    document.addEventListener("keypress", e => {
+        if(e.keyCode == 13) login();
     })
 }
 
@@ -38,7 +45,7 @@ function check() {
 }
 
 function redir(to) {
-    to+=".html"/* DISABLE FOR RELEASE */
+    //to+=".html"/* DISABLE FOR RELEASE */
     window.location.href = to;
 }
 
@@ -55,7 +62,7 @@ socket.on("logged_in", info => {
 })
 
 socket.on("err", err => {
-    if(!at(index)) return;
+    if(!at("index")) return;
     document.getElementById("status").innerText = err;
     document.getElementById("status").style.color = "#ff4f4f";
 })

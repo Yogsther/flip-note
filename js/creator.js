@@ -163,6 +163,45 @@ function upload(){
     else document.getElementById("save-popup").style.transform = "scale(1)";
 }
 
+function upload_to_server(){
+    if(!socket.connected) upload_message("error.Can't connect to server, please try again.");
+    else {
+        var flipnote = {
+            title: document.getElementById("upload-input").value,
+            fps: Number(document.getElementById("fps").value),
+            content: []
+        }
+
+        for(c of canvas_arr){
+            flipnote.content.push(c.toDataURL());
+        }
+
+        socket.emit("upload", {
+            token: token,
+            flipnote: flipnote
+        })
+    }
+}
+
+socket.on("err", e => upload_message(e));
+
+
+/** Display message inside the upload box.
+ * @param {String} message - Should be formated as: type.message (ex. "warn.This is a warning!"") 
+ */
+function upload_message(message){
+    var type = message.substr(0, message.indexOf("."));
+    var message = message.substr(message.indexOf(".")+1);
+
+    var color = "#69ff5b";
+    if(type == "warn") color = "#ffc85b";
+    if(type == "error") color = "#fc4655";
+
+    var el = document.getElementById("status");
+        el.style.color = color;
+        el.innerHTML = message;
+}
+
 document.addEventListener("click", e => {
     if(uploading) return;
     var found = false;
