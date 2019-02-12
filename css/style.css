@@ -320,6 +320,50 @@ img {
     height: 100px;
     border-radius: 10px;
     background: rgb(218, 30, 71);
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.609) !important;
+    z-index: 1000;
+    top: -50px;
+    position: relative;
+    margin-bottom: -30px;
+}
+
+
+#extra-options{
+    z-index: 0;
+    width: 90%;
+    height: 40px;
+    background: rgb(222, 57, 93);
+    top: 90px;
+    position: relative;
+    margin: 0 auto;
+    border-radius: 0px 0px 10px 10px;
+    
+}
+
+.extra-button{
+    display: inline-block;
+    background: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
+    font: Ubuntu;
+    font-weight: 600;
+    position: relative;
+    border-radius: 10px;
+    padding: 5px;
+    width: 100px;
+    top: 5px;
+    text-align: center;
+    margin-left: 6px;
+    margin-right: 6px;
+    cursor: pointer;
+    transition: all .1s;
+}
+
+.extra-button:hover{
+    transform: scale(1.05);
+}
+
+.extra-button:active{
+    transform: scale(0.95);
 }
 
 #logo{
@@ -437,3 +481,26 @@ img {
     font-family: 'blocky';
     src: url('blocky.ttf')  format('truetype')
 }
+
+#loading-more{
+    color: white;
+    position: relative;
+    font-size: 20px;
+    text-align: center;
+    height: 100px;
+    margin-top: 50px;
+}
+
+.header-button{
+    color: white;
+    display: inline-block;
+    top: 33px;
+    margin-right: 140px;
+    font-size: 25px;
+    position: relative;
+    cursor: pointer;
+    float: right;
+    text-align: center;
+    user-select: none;
+}
+

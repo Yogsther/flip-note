@@ -1,0 +1,16 @@
+User page
+    Follow users
+    Display notes
+    Display amount of stars
+    Logout
+
+Feed
+    Generate feed based on follows
+    Hot feed
+    Staff picks
+
+More option (...)
+    Report
+    Pin [SELF]
+    Delete [SELF OR MOD]
+    Staff pick [MOD]

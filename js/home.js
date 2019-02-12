@@ -1,19 +1,96 @@
+var feed_progress = 0;
+var end = false;
+var feed = document.getElementById("feed");
+var feed_type;
+var username = "?"
+var sent_not_recived = false;
+
 if (at("home")) {
-    socket.emit("get_feed", token);
+    get_feed("user_feed", document.getElementsByClassName("extra-button")[0]);
+}
+
+function goto_profile(){
+    redir("profile?" + me.username);
+}
+
+var loading_more = document.createElement("div")
+    loading_more.innerText = "Loading more...";
+    loading_more.id = "loading-more";
+
+function get_feed(type, el){
+    if(sent_not_recived) return;
+    sent_not_recived = true;
+    console.log("Sent")
+    if(at("home")){
+        for(e of document.getElementsByClassName("extra-button")){
+            if(el == e){
+                e.style.background = "#111";
+                e.style.color = "white";
+            }
+            else {
+                e.style.background = "white";
+                e.style.color = "black";
+            }
+        }
+    }
+    end = false;
+    feed_type = type;
+    feed_progress = 0;
+    document.getElementById("feed").innerHTML = "";
+    socket.emit("get_notes", {
+        token: token,
+        type: type,
+        progress: feed_progress,
+        username: username
+    });
 }
 
 socket.on("feed", content => {
-    var feed = document.getElementById("feed");
-    for (note of content) {
+    sent_not_recived = false;
+    end = content.end;
+    feed_progress = content.progress;
+    loading_more.remove();
+    for (note of content.notes) {
         feed.appendChild(generate_note_DOM(note));
     }
+    feed.appendChild(loading_more);
 });
 
 var logo_index = 0;
 setInterval(() => {
     document.getElementById("logo").src = "img/icons/logo_"+logo_index%2+".png";
+    if(!end){
+        var dots = "";
+    for(i = 0; i < logo_index%4; i++) dots+=".";
+    loading_more.innerText = "Loading more" + dots;
+    } else  if(feed.childElementCount > 1) {
+        loading_more.innerText = "Nothing more.";
+    } else {
+        loading_more.innerText = "Nothing here.";
+    }
     logo_index++;
 }, 250)
+
+window.onscroll = function (ev) {
+    let scrollHeight = Math.max(
+        document.body.scrollHeight, document.documentElement.scrollHeight,
+        document.body.offsetHeight, document.documentElement.offsetHeight,
+        document.body.clientHeight, document.documentElement.clientHeight
+    );
+    let currentScrollHeight = window.innerHeight + window.scrollY;
+
+    if ((scrollHeight - currentScrollHeight) < 200) {
+        if(!end){
+            if(sent_not_recived) return;
+            sent_not_recived = true;
+            socket.emit("get_notes", {
+                token: token,
+                type: feed_type,
+                progress: feed_progress
+            });
+        }
+    }
+};
 
 function star(el){
     var star = el;
