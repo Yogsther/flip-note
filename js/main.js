@@ -1,11 +1,25 @@
 var socket = io.connect("nut.livfor.it:2008");
+//var socket = io.connect("localhost:2008");
 var loc = window.location.href.split("/").pop();
 var token = localStorage.getItem("token");
+
+function redir(to) {
+    //to+=".html"/* DISABLE FOR RELEASE */
+    window.location.href = to;
+}
 
 function at(name) {
     if (name == "index" && loc == "") return true;
     if (loc.indexOf(name) != -1) return true;
     return false;
+}
+
+function get_tag(title, color){
+    var tag = document.createElement("div");
+        tag.classList.add("tag");
+        tag.innerText = title;
+        tag.style.background = color;
+    return tag;
 }
 
 if (localStorage.getItem("token")) {
@@ -44,10 +58,7 @@ function check() {
     socket.emit("check", username_el.value);
 }
 
-function redir(to) {
-    //to+=".html"/* DISABLE FOR RELEASE */
-    window.location.href = to;
-}
+
 
 socket.on("check", taken => {
     if (taken) document.getElementsByClassName("login-button")[0].innerHTML = "Login <span style='color:rgba(20, 20, 20, 0.411) !important'>/ Signup</span>";
@@ -56,8 +67,12 @@ socket.on("check", taken => {
 
 socket.on("logged_in", info => {
     localStorage.setItem("token", info.token);
+    me = info.user;
     if (at("index")) {
         redir("home")
+    }
+    if(at("home") || at("profile") || at("note")){
+        document.getElementById("logged-in-status").innerText = me.username;
     }
 })
 

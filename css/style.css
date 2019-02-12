@@ -196,12 +196,16 @@ button:active {
 }
 
 img {
-    user-drag: none;
     user-select: none;
     -moz-user-select: none;
     -webkit-user-drag: none;
     -webkit-user-select: none;
     -ms-user-select: none;
+    margin: 0 auto;
+    display: block;
+    position: absolute;
+    pointer-events: none;
+    user-select: none;
 }
 
 .icon {
@@ -303,7 +307,7 @@ img {
 /* Home screen */
 
 #home-wrap{
-    width: 900px;
+    width: 700px;
     max-width: 90%;
     display: block;
     position: relative;
@@ -316,6 +320,11 @@ img {
     height: 100px;
     border-radius: 10px;
     background: rgb(218, 30, 71);
+}
+
+#logo{
+    height: 100px;
+    left: 20px;
 }
 
 #home-title{
@@ -338,7 +347,7 @@ img {
     width: 95%;
     margin: 0 auto;
     margin-bottom: 20px;
-    height: 480px;
+    height: 500px;
     background: rgb(34, 34, 34);
     border-bottom: solid rgb(218, 30, 71) 5px;
     border-radius: 5px;
@@ -347,9 +356,10 @@ img {
 .flip-note-title{
     color: white;
     font-size: 20px;
-    top: 45px;
+    top: 35px;
     left: 20px;
     position: relative;
+    line-height: 35px;
 }
 
 
@@ -357,7 +367,7 @@ img {
     color: white;
     float: right;
     text-align: right;
-    top: 45px;
+    top: 35px;
     right: 22px;
     font-size: 20px;
     position: relative;
@@ -371,26 +381,59 @@ img {
     position: relative;
     top: 20px;
     border-radius: 5px;
+    image-rendering: pixelated;
+}
+
+#logged-in-status{
+    color: white;
+    float: right;
+    display: block;
+    top: 33px;
+    right: 30px;
+    font-size: 25px;
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+    text-align: right;
 }
 
 .star{
     height: 50px;
     width: 50px;
     position: relative;
-    fill: rgb(187, 187, 187);
     float: right;
-    top: 30px;
+    top: 20px;
     right: 20px;
     cursor: pointer;
     transition: all .1s;
+    fill: rgb(187, 187, 187);
 }
 
 .star:hover{
     transform: /* rotate(72deg) */ scale(1.1);
-    fill: rgb(218, 30, 71);
+    fill: rgb(218, 30, 71) !important;
 }
 
 .star:active{
     transform: /* rotate(0deg) */ scale(0.95);
 }
 
+.tag{
+    font-size: 16px;
+    padding: 3px;
+    top: -2px;
+    position: relative;
+    line-height: 25px;
+    border-radius: 5px;
+    text-align: center;
+    margin-left: 10px;
+    display: inline-block;
+    color: rgb(34, 34, 34); 
+    font-family: 'Ubuntu';
+    font-weight: 700;
+}
+
+@font-face {
+    font-family: 'blocky';
+    src: url('blocky.ttf')  format('truetype')
+}
