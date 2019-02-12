@@ -19,14 +19,14 @@ body {
     position: relative;
     margin: 0 auto;
     top: 10vw;
-    color: rgb(228, 76, 76);
+    color: rgb(77, 77, 77);
     max-width: 95%;
-    outline: solid 0px rgb(228, 76, 76);
+    outline: solid 0px rgb(77, 77, 77);
     transition: all .1s;
 }
 
 .login-window:hover {
-    outline: solid 5px rgb(228, 76, 76);
+    outline: solid 5px rgb(77, 77, 77);
     ;
 }
 
@@ -57,7 +57,7 @@ body {
     width: 200px;
     height: 60px;
     border: none;
-    background: rgb(228, 76, 76);
+    background: rgb(77, 77, 77);
     font-size: 16px;
     display: block;
     position: relative;
@@ -319,7 +319,7 @@ img {
     width: 100%;
     height: 100px;
     border-radius: 10px;
-    background: rgb(218, 30, 71);
+    background: rgb(77, 77, 77);
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.609) !important;
     z-index: 1000;
     top: -50px;
@@ -332,7 +332,7 @@ img {
     z-index: 0;
     width: 90%;
     height: 40px;
-    background: rgb(222, 57, 93);
+    background: rgb(77, 77, 77);
     top: 90px;
     position: relative;
     margin: 0 auto;
@@ -342,8 +342,8 @@ img {
 
 .extra-button{
     display: inline-block;
-    background: rgb(255, 255, 255);
-    color: rgb(0, 0, 0);
+    background: none;
+    color: rgb(255, 255, 255);
     font: Ubuntu;
     font-weight: 600;
     position: relative;
@@ -393,7 +393,7 @@ img {
     margin-bottom: 20px;
     height: 500px;
     background: rgb(34, 34, 34);
-    border-bottom: solid rgb(218, 30, 71) 5px;
+    border-bottom: solid rgb(77, 77, 77) 5px;
     border-radius: 5px;
 }
 
@@ -429,16 +429,16 @@ img {
 }
 
 #logged-in-status{
-    color: white;
+    /* color: white;
     float: right;
     display: block;
     top: 33px;
-    right: 30px;
+    right: 50px;
     font-size: 25px;
     position: relative;
     cursor: pointer;
     user-select: none;
-    text-align: right;
+    text-align: right; */
 }
 
 .star{
@@ -455,7 +455,7 @@ img {
 
 .star:hover{
     transform: /* rotate(72deg) */ scale(1.1);
-    fill: rgb(218, 30, 71) !important;
+    fill: rgb(77, 77, 77) !important;
 }
 
 .star:active{
@@ -495,7 +495,7 @@ img {
     color: white;
     display: inline-block;
     top: 33px;
-    margin-right: 140px;
+    margin-right: 90px;
     font-size: 25px;
     position: relative;
     cursor: pointer;
