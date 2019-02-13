@@ -16,31 +16,39 @@ var palette = [
 
 if (!theme) theme = palette[0];
 
-
-
 function redir(to) {
-    to+=".html"/* DISABLE FOR RELEASE */
+    if(location.href.indexOf("flip.livfor.it") == -1){
+        if(to.indexOf("?") != -1){
+            to = to.split("")
+            to.splice(to.indexOf("?"), 0, ".html")
+            to = to.join("");
+            console.log(to);
+        } else to+=".html"/* DISABLE FOR RELEASE */
+    }
     window.location.href = to;
+}
+
+function save_locally(n) {
+    localStorage.setItem("note", JSON.stringify(n));
 }
 
 window.onload = () => {
     apply_theme();
 }
 
-
+socket.on("reload", () => location.reload())
 
 function apply_theme() {
-
 
     if (at("home") || at("profile")) {
         document.getElementById("home-header").style.background = theme;
         if(at("home")) document.getElementById("extra-options").style.background = pSBC(-.4, theme);
-        if (at("profile")) document.getElementById("profile-banner").style.background = theme;  
+        if (at("profile")) document.getElementById("profile-banner").style.background = pSBC(-.3, theme);  
     }
 
     if (at("index")) {
         document.getElementsByClassName("login-title")[0].style.color = theme;
-        document.getElementsByClassName("login-button")[0].style.color = theme;
+        document.getElementsByClassName("login-button")[0].style.background = theme;
     }
 
     function pSBC(p, from, to) {
@@ -77,7 +85,7 @@ function apply_theme() {
 
 function at(name) {
     if (name == "index" && loc == "") return true;
-    if (loc.indexOf(name) != -1) return true;
+    if (loc.toLowerCase().indexOf(name.toLowerCase()) != -1) return true;
     return false;
 }
 
@@ -85,7 +93,8 @@ function get_tag(title, color) {
     var tag = document.createElement("div");
     tag.classList.add("tag");
     tag.innerText = title;
-    tag.style.background = theme;
+    if(!color) tag.style.background = theme;
+        else tag.style.background = color;
     return tag;
 }
 

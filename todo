@@ -1,16 +1,35 @@
+TODO for Flip Note
+
+[x] SEMI-DONE
+[X] DONE
+[/] DISREGARDED
+
 User page
-    Follow users
-    Display notes
-    Display amount of stars
-    Logout
+    [X] Follow users
+    [X] Display notes 
+    [X] Display amount of stars
+    [X] Logout 
+    Bio
+    Profile picture (low prio)
 
 Feed
-    Generate feed based on follows
-    Hot feed
-    Staff picks
+    [X] Generate feed based on follows 
+    [X] Staff picks 
 
-More option (...)
+More option (...) (Drop down menu)
     Report
-    Pin [SELF]
-    Delete [SELF OR MOD]
-    Staff pick [MOD]
+    [X] Pin [SELF] 
+    [X] Delete [SELF OR STAFF] 
+    [X] Staff pick [MOD] 
+
+Editor
+    Add auto-save message when autosaving.
+    Add undo feature
+    Add paste on-to layer
+    Add thumbnails for nearby frames
+    Add paint bucket
+
+About page 
+    Suggestions link
+    Tutorial of the site 
+    Uptime status

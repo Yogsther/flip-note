@@ -205,9 +205,7 @@ function save_note() {
     save_locally(flipnote);
 }
 
-function save_locally(n) {
-    localStorage.setItem("note", JSON.stringify(n));
-}
+
 
 function load_next() {
     var temp_img = document.createElement("img");

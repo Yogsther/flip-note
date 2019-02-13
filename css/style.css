@@ -2,6 +2,7 @@ body {
     background: #111;
     margin: 0;
     min-width: 789px;
+    overflow: hidden;
 }
 
 * {
@@ -332,7 +333,7 @@ img {
     border-radius: 10px;
     background: rgb(77, 77, 77);
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.609) !important;
-    z-index: 1000;
+    z-index: 10;
     top: -50px;
     position: relative;
     margin-bottom: -30px;
@@ -393,8 +394,21 @@ img {
     margin: 0 auto;
     display: block;
     position: relative;
-    width: 100%;
-    top: 50px;
+    width: 600px;
+    height: calc(100vh - 160px);
+    overflow: auto;
+    top: 20px;
+}
+
+::-webkit-scrollbar {
+    background-color: black;
+    width: 10px;
+    border-radius: 1px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #3a3a3a;
+    border-radius: 3px;
 }
 
 .flip-note{
@@ -402,7 +416,8 @@ img {
     max-width: 552px;
     width: 95%;
     margin: 0 auto;
-    margin-bottom: 20px;
+    margin-top: 20px;
+    margin-bottom: 10px;
     height: 500px;
     background: rgb(34, 34, 34);
     border-bottom: solid rgb(77, 77, 77) 5px;
@@ -522,7 +537,7 @@ img {
     display: inline-block;
     top: 25px;
     right: 10px;
-    z-index: 999999;
+    z-index: 100;
     float: right;
     cursor: pointer;
 }
@@ -533,8 +548,26 @@ img {
 }
 
 .drop-down-menu{
-    width: 100px;
-    height: 300px;
-    background: red;
+    z-index: 101;
+    width: 200px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.288);
+    background: rgb(61, 61, 61);
     position: absolute;
+    overflow: hidden;
+}
+
+.option{
+    color: rgb(236, 236, 236);
+    display: block;
+    background: rgb(34, 34, 34);
+    padding: 10px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all .1s;
+}
+
+.option:hover{
+    color: white;
+    background: rgb(48, 48, 48);
 }

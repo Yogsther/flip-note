@@ -56,7 +56,7 @@ socket.on("feed", content => {
     feed.appendChild(loading_more);
 });
 
-function set_theme(el){
+function set_theme(el) {
     localStorage.setItem("theme", el.style.background);
     location.reload();
 }
@@ -72,7 +72,7 @@ setInterval(() => {
     } else if (feed.childElementCount > 1) {
         if (me.username == username) {
             var palette_arr = "";
-            for(color of palette) palette_arr+="<span class='theme-button' onclick='set_theme(this)' style='background:" + color + ";'></span>";
+            for (color of palette) palette_arr += "<span class='theme-button' onclick='set_theme(this)' style='background:" + color + ";'></span>";
             loading_more.innerHTML = palette_arr;
         } else loading_more.innerText = "Nothing more.";
     } else {
@@ -82,15 +82,10 @@ setInterval(() => {
     logo_index++;
 }, 250)
 
-window.onscroll = function (ev) {
-    let scrollHeight = Math.max(
-        document.body.scrollHeight, document.documentElement.scrollHeight,
-        document.body.offsetHeight, document.documentElement.offsetHeight,
-        document.body.clientHeight, document.documentElement.clientHeight
-    );
-    let currentScrollHeight = window.innerHeight + window.scrollY;
+document.getElementById("feed").onscroll = function (ev) {
+    if (drop_down_el) drop_down_el.remove();
 
-    if ((scrollHeight - currentScrollHeight) < 200) {
+    if (feed.scrollHeight - feed.clientHeight - feed.scrollTop < 600) {
         if (!end) {
             if (sent_not_recived) return;
             sent_not_recived = true;
@@ -116,7 +111,7 @@ function star(el) {
         nr_likes.innerText = Number(nr_likes.innerText) + 1;
         star.style.fill = theme;
         star.setAttribute("starred", "true")
-        star.innerHTML = '<svg version="1.1" style="fill: '+theme+';" id="Layer_1" class="star" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="-285 408.9 24 24" style="enable-background:new -285 408.9 24 24;" xml:space="preserve"> <style type="text/css"> .st0{display:none;} </style> <rect x="-285" y="408.9" class="st0" width="24" height="24"/> <path class="st0" d="M-264.8,419.7l-3.7,3.2l1.1,4.7c0.2,0.9-0.7,1.5-1.5,1.1l-4.2-2.5l-4.2,2.5c-0.8,0.5-1.7-0.2-1.5-1.1l1.1-4.7 l-3.7-3.2c-0.7-0.6-0.3-1.7,0.6-1.8l4.8-0.4l1.9-4.5c0.3-0.8,1.5-0.8,1.8,0l1.9,4.5l4.8,0.4C-264.5,418-264.1,419.1-264.8,419.7z"/> <path d="M-265.4,417.9l-4.8-0.4l-1.9-4.5c-0.3-0.8-1.5-0.8-1.8,0l-1.9,4.5l-4.8,0.4c-0.9,0.1-1.2,1.2-0.6,1.8l3.7,3.2l-1.1,4.7 c-0.2,0.9,0.7,1.5,1.5,1.1l4.2-2.5l4.2,2.5c0.8,0.5,1.7-0.2,1.5-1.1l-1.1-4.7l3.7-3.2C-264.1,419.1-264.5,418-265.4,417.9z"/> </svg>'
+        star.innerHTML = '<svg version="1.1" style="fill: ' + theme + ';" id="Layer_1" class="star" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="-285 408.9 24 24" style="enable-background:new -285 408.9 24 24;" xml:space="preserve"> <style type="text/css"> .st0{display:none;} </style> <rect x="-285" y="408.9" class="st0" width="24" height="24"/> <path class="st0" d="M-264.8,419.7l-3.7,3.2l1.1,4.7c0.2,0.9-0.7,1.5-1.5,1.1l-4.2-2.5l-4.2,2.5c-0.8,0.5-1.7-0.2-1.5-1.1l1.1-4.7 l-3.7-3.2c-0.7-0.6-0.3-1.7,0.6-1.8l4.8-0.4l1.9-4.5c0.3-0.8,1.5-0.8,1.8,0l1.9,4.5l4.8,0.4C-264.5,418-264.1,419.1-264.8,419.7z"/> <path d="M-265.4,417.9l-4.8-0.4l-1.9-4.5c-0.3-0.8-1.5-0.8-1.8,0l-1.9,4.5l-4.8,0.4c-0.9,0.1-1.2,1.2-0.6,1.8l3.7,3.2l-1.1,4.7 c-0.2,0.9,0.7,1.5,1.5,1.1l4.2-2.5l4.2,2.5c0.8,0.5,1.7-0.2,1.5-1.1l-1.1-4.7l3.7-3.2C-264.1,419.1-264.5,418-265.4,417.9z"/> </svg>'
 
     }
 
@@ -129,18 +124,22 @@ function star(el) {
 
 var current_drop_down_note;
 
-function drop_down(el){
+function drop_down(el) {
     var pos = el.getBoundingClientRect();
     var options = [];
     var note = notes[el.id];
-        current_drop_down_note = el.id;
+    current_drop_down_note = el.id;
 
-    if(note.uploader.username == me.uploader){
+    if (note.uploader.username == me.username) {
         options.push({
             text: "Pin to profile",
             run: () => {
-                socket.emit("pin", current_drop_down_note);
-            }
+                socket.emit("pin", {
+                    id: current_drop_down_note,
+                    token: token
+                });
+            },
+            title: "Pin this note to your profile"
         })
     }
 
@@ -148,12 +147,44 @@ function drop_down(el){
         text: "Create flip note from",
         title: "Load this flip note into your editor",
         run: () => {
-            save_locally(notes[current_drop_down_note]);
-            redir("create");
+            if (confirm("Opening this in your editor will delete any non-uploaded content in your editor! Are you sure you want to proceed?")) {
+                save_locally(notes[current_drop_down_note]);
+                redir("create");
+            }
         }
     })
 
-    display_drop_down(pos.left, pos.top, options);
+    if (me.staff && note.uploader.username != me.username) {
+        options.push({
+            text: 'Pick for STAFF PICKS',
+            title: "Apply STAFF PICK to this note.",
+            color: "#f4bf42",
+            run: () => {
+                socket.emit("staff_pick", {
+                    id: current_drop_down_note,
+                    token: token
+                })
+            }
+        })
+    }
+
+    if (me.staff || me.username == note.uploader.username) {
+        options.push({
+            text: 'Delete note',
+            title: "Delete this note, can't be undone.",
+            color: "#ff4444",
+            run: () => {
+                if (confirm("Are you sure you want to delete this note? This cannot be undone")) {
+                    socket.emit("delete_note", {
+                        id: current_drop_down_note,
+                        token: token
+                    })
+                }
+            }
+        })
+    }
+
+    display_drop_down(pos.left + window.scrollX, pos.top + window.scrollY, note.id, options);
 }
 
 
@@ -164,25 +195,56 @@ var drop_down_el;
  * @param {*} y 
  * @param {Option} options array of options, ex. of Option: {text: "Text", run: function(){CODE TO RUN}], color: "#color", title:"title"} 
  */
-function display_drop_down(note_id, options){
-    if(drop_down_el){
+function display_drop_down(x, y, note_id, options) {
+    if (drop_down_el) {
         drop_down_el.remove();
-        drop_down_el = false;
     }
 
     drop_down_el = document.createElement("div");
-    drop_down_el.classList.add("drop-down-menu");
+    for (option of options) {
+        var option_el = document.createElement("div");
+        option_el.classList.add("option");
+        option_el.innerText = option.text;
+        option_el.title = option.title;
+        option_el.onclick = option.run;
+        if (option.color) option_el.style.color = option.color;
+        drop_down_el.appendChild(option_el);
+    }
 
-    console.log(drop_down_el.style)
+    drop_down_el.setAttribute("id", "drop_down")
+    drop_down_el.classList.add("drop-down-menu");
     document.body.appendChild(drop_down_el);
+    drop_down_el.style.left = x + 25 + "px";
+    drop_down_el.style.top = (y - drop_down_el.offsetHeight) + "px";
 }
+
+document.body.addEventListener("click", e => {
+    if (!drop_down_el) return;
+    var found = false;
+    if (drop_down_el)
+        for (el of e.path) {
+            if (el.id) {
+                if (el.id == "drop_down") found = true;
+                //console.log(el.id) 
+            }
+            if (el.classList) {
+                if (el.classList.value.indexOf("drop-down-button") != -1) found = true;
+            }
+        }
+    if (!found) drop_down_el.remove();
+})
+
 
 
 function generate_note_DOM(note) {
 
     var flip_note_dom = document.createElement("div");
-        flip_note_dom.classList.add("flip-note");
-        flip_note_dom.style.borderBottomColor = theme;
+    flip_note_dom.classList.add("flip-note");
+    flip_note_dom.style.borderBottomColor = theme;
+
+    if (note.pinned && at(note.uploader.username)) {
+        flip_note_dom.style.border = theme + " solid 5px";
+    }
 
     var flip_image = document.createElement("img");
     flip_image.classList.add("flip-image");
@@ -192,15 +254,20 @@ function generate_note_DOM(note) {
 
     var title = document.createElement("span")
     title.classList.add("flip-note-title");
+    var pick = "";
+    var pin = "";
     var staff = "";
-    if (note.uploader.staff) staff = get_tag("STAFF", "rgb(218, 30, 71)").outerHTML;
-    title.innerHTML = sanitizeHTML(note.title) + "<span style='color:grey;cursor:pointer;' onclick='redir(" + '"' + "profile?" + note.uploader.username + '"' + ")'><br> by " + sanitizeHTML(note.uploader.username) + "</span>" + staff;
+    if (note.staff_pick) pick = get_tag("PICK", "#f4bf42").outerHTML;
+    if (note.pinned && at(note.uploader.username)) pin = get_tag("PINNED").outerHTML;
+    if (note.uploader.staff) staff = get_tag("STAFF").outerHTML;
+
+    title.innerHTML = sanitizeHTML(note.title) + "<span style='color:grey;cursor:pointer;' onclick='redir(" + '"' + "profile?" + note.uploader.username + '"' + ")'><br> by " + sanitizeHTML(note.uploader.username) + " " + Math.round((Date.now()-note.date)/60/60/24/1000) + "d</span>" + pick + pin + staff;
 
     var drop_down_button = document.createElement("span");
-        drop_down_button.id = note.id;
-        drop_down_button.classList.add("drop-down-button")
-        drop_down_button.setAttribute("onclick", "drop_down(this)");
-        drop_down_button.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>';
+    drop_down_button.id = note.id;
+    drop_down_button.classList.add("drop-down-button")
+    drop_down_button.setAttribute("onclick", "drop_down(this)");
+    drop_down_button.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>';
 
     var star = document.createElement("span");
     star.id = note.id;

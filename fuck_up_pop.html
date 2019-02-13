@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
+</head>
+
+<body>
+    Hello
+    <button onclick="generate_and_post()">Fuck up</button>
+
+    <script>
+        var socket = io.connect("90.231.78.251:4000");
+        var names = ["Adam", "Alex", "Aaron", "Ben", "Carl", "Dan", "David", "Edward", "Fred", "Frank", "George", "Hal",
+            "Hank", "Ike", "John", "Jack", "Joe", "Larry", "Monte", "Matthew", "Mark", "Nathan", "Otto", "Paul",
+            "Peter", "Roger", "Roger", "Steve", "Thomas", "Tim", "Ty", "Victor", "Walter"
+        ];
+        var last_names = ["Severson", "Shaffer", "Solberg", "Soloman", "Sonderling", "Soukup", "Soulis", "Stahl",
+            "Sweeney", "Tandy", "Trebil", "Trusela", "Trussel", "Turco", "Uddin", "Uflan", "Ulrich", "Upson",
+            "Vader", "Vail", "Valente", "Van Zandt", "Vanderpoel", "Ventotla", "Vogal", "Wagle", "Wagner",
+            "Wakefield", "Weinstein", "Weiss", "Woo", "Yang", "Yates", "Yocum", "Zeaser", "Zeller", "Ziegler",
+            "Bauer"
+        ];
+        var created_users = [];
+        //setInterval(() => {
+        var name = names[Math.floor(Math.random() * names.length)];
+        var last_name = last_names[Math.floor(Math.random() * last_names.length)]
+        var user;
+
+        socket.on("connect", () => generate_and_post())
+
+        function generate_and_post() {
+            if (user) {
+                var messages = ["Just created an account on here! Awesome place!", "Hi people of bootleg facebook!",
+                    "I love this site, gonna show this to my cheating wife soon.", "Hi people!",
+                    "I you want to talk to a horny man, email me at " + user.email + ", boys and girls welcome :)",
+                    "Visit flip.livfor.it, an awesome site!", "Hi kids", "Awesome! Email me kids: " + user.email,
+                    "If anyone wanna talk in private, plz email me mmmmm my dick is engorged... " + user.email +
+                    " kisses. xoxoxo"
+                ];
+                var post ={
+                    text: messages[Math.floor(Math.random()*messages.length)],
+                    username: user.username
+                };
+                socket.emit("post", post);
+                console.log("Posted for " + user.username + " , " + post.text);
+            }
+            name = names[Math.floor(Math.random() * names.length)];
+            last_name = last_names[Math.floor(Math.random() * last_names.length)]
+            user = {
+                username: name.toLowerCase() + Math.floor(Math.random() * 100),
+                email: name.toLowerCase() + "." + last_name.toLowerCase() + "@hotmail.com",
+                password: "hellowhat",
+                fullname: name + " " + last_name,
+            }
+
+            while(created_users.indexOf(user.username) != -1) user.username = name.toLowerCase() + Math.floor(Math.random() * 100);
+            created_users.push(user.username);
+            socket.emit("newUser", user);
+            console.log("Created account for " + user.username);
+        }
+
+        socket.on('redirect', site => {
+            generate_and_post();
+        });
+
+        //})
+    </script>
+
+</body>
+
+</html>
