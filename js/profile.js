@@ -14,9 +14,13 @@ socket.on("profile", profile => {
         follow_button.style.background = "white";
         follow_button.innerText = "FOLLOWING"
     }   
+    document.title = username + " | Flip Note";
+
     if(profile.username == me.username){
         document.getElementById("logged-in-status").innerText = "Logout";
         document.getElementById("logged-in-status").setAttribute("onclick", "logout()")
+        follow_button.style.color = "rgba(255,255,255,.6)";
+        follow_button.style.borderColor  = "rgba(255,255,255,.6)";
     }
 })
 

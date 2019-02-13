@@ -4,20 +4,22 @@ var loc = window.location.href.split("/").pop();
 var token = localStorage.getItem("token");
 var theme = localStorage.getItem("theme");
 var palette = [
-    "#f44242",
+    "#ef323e",
     "#f4bb41",
     "#41bef4",
     "#b841f4",
     "#f4417f",
     "#424242",
     "#dbdbdb",
-    "#ffbb1e"
-]
+    "#00aa16"
+];
 
 if (!theme) theme = palette[0];
 
+
+
 function redir(to) {
-    //to+=".html"/* DISABLE FOR RELEASE */
+    to+=".html"/* DISABLE FOR RELEASE */
     window.location.href = to;
 }
 

@@ -119,16 +119,16 @@ canvas {
 
 .colors {
     display: block;
-    width: 100%;
+    width: 778px;
     position: relative;
     top: 630px;
+    left: -10px;
 }
 
 .color {
-    width: 50px;
-    height: 50px;
-    margin-right: 10px;
-    background: blue;
+    width: 54.84px;
+    height: 55px;
+    margin-left: 10px;
     display: inline-block;
     transition: all .05s;
     cursor: pointer;
@@ -219,7 +219,7 @@ img {
 
 .playback {
     float: right;
-    top: 576px;
+    top: 0px;
     position: relative;
 }
 
@@ -238,7 +238,17 @@ img {
 #upload{
     display: inline-block;
     position: absolute;
-    right: 0px;
+    left: 60px;
+}
+
+#delete{
+    display: inline-block;
+    position: absolute;
+    left: 0px;
+}
+
+#delete > svg {
+    fill: #f12d2d;
 }
 
 .upload-status{

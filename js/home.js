@@ -143,7 +143,7 @@ function generate_note_DOM(note) {
     title.classList.add("flip-note-title");
     var staff = "";
     if (note.uploader.staff) staff = get_tag("STAFF", "rgb(218, 30, 71)").outerHTML;
-    title.innerHTML = sanitizeHTML(note.title) + "<span style='color:grey'><br> by " + sanitizeHTML(note.uploader.username) + "</span>" + staff;
+    title.innerHTML = sanitizeHTML(note.title) + "<span style='color:grey;cursor:pointer;' onclick='redir(" + '"' + "profile?" + note.uploader.username + '"' + ")'><br> by " + sanitizeHTML(note.uploader.username) + "</span>" + staff;
 
     var star = document.createElement("span");
     star.id = note.id;
