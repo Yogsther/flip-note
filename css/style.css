@@ -1,6 +1,7 @@
 body {
     background: #111;
     margin: 0;
+    min-width: 789px;
 }
 
 * {
@@ -397,6 +398,7 @@ img {
 }
 
 .flip-note{
+    position: relative;
     max-width: 552px;
     width: 95%;
     margin: 0 auto;
@@ -422,7 +424,7 @@ img {
     float: right;
     text-align: right;
     top: 35px;
-    right: 22px;
+    right: 15px;
     font-size: 20px;
     position: relative;
     margin-left: 5px;
@@ -457,7 +459,7 @@ img {
     position: relative;
     float: right;
     top: 20px;
-    right: 20px;
+    right: 10px;
     cursor: pointer;
     transition: all .1s;
     fill: rgb(187, 187, 187);
@@ -514,3 +516,25 @@ img {
     user-select: none;
 }
 
+
+.drop-down-button{
+    position: relative;
+    display: inline-block;
+    top: 25px;
+    right: 10px;
+    z-index: 999999;
+    float: right;
+    cursor: pointer;
+}
+
+.drop-down-button > svg{
+    fill: rgb(190, 190, 190);
+    width: 40px;
+}
+
+.drop-down-menu{
+    width: 100px;
+    height: 300px;
+    background: red;
+    position: absolute;
+}

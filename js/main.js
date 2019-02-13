@@ -19,7 +19,7 @@ if (!theme) theme = palette[0];
 
 
 function redir(to) {
-    //to+=".html"/* DISABLE FOR RELEASE */
+    to+=".html"/* DISABLE FOR RELEASE */
     window.location.href = to;
 }
 

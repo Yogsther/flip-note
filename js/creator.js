@@ -35,8 +35,7 @@ var note = {
         "#2f2fd8",
         "#b841f4",
         "#f4417f",
-        "#9b9b9b",
-        
+        "#9b9b9b"
     ]
 }
 
@@ -214,7 +213,7 @@ function load_next() {
     var temp_img = document.createElement("img");
     temp_img.src = loaded_note.content[load_index];
     temp_img.onload = () => {
-        if (load_index > 0) new_frame();
+        if (load_index > 0) new_frame(true);
         canvas_arr[load_index].getContext("2d").drawImage(temp_img, 0, 0);
         load_index++;
         if (load_index < loaded_note.content.length) load_next();
@@ -227,7 +226,7 @@ function load_locally_note() {
     if (loaded_note) {
         loaded_note = JSON.parse(loaded_note)
         document.getElementById("fps").value = loaded_note.fps;
-        update_speed();
+        update_speed(true);
         document.getElementById("upload-input").value = loaded_note.title;
 
         load_next();
@@ -315,7 +314,6 @@ function dont_shortcut() {
 
 
 document.addEventListener("keypress", e => {
-    console.log(e.keyCode)
     if (dont_shortcut()) return;
     switch (e.keyCode) {
         case 32:

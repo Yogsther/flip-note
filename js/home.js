@@ -2,7 +2,8 @@ var feed_progress = 0;
 var end = false;
 var feed = document.getElementById("feed");
 var feed_type;
-var username = "?"
+var username = "?";
+var notes = [];
 var sent_not_recived = false;
 
 if (at("home")) {
@@ -49,6 +50,7 @@ socket.on("feed", content => {
     feed_progress = content.progress;
     loading_more.remove();
     for (note of content.notes) {
+        notes[note.id] = note;
         feed.appendChild(generate_note_DOM(note));
     }
     feed.appendChild(loading_more);
@@ -125,6 +127,55 @@ function star(el) {
 }
 
 
+var current_drop_down_note;
+
+function drop_down(el){
+    var pos = el.getBoundingClientRect();
+    var options = [];
+    var note = notes[el.id];
+        current_drop_down_note = el.id;
+
+    if(note.uploader.username == me.uploader){
+        options.push({
+            text: "Pin to profile",
+            run: () => {
+                socket.emit("pin", current_drop_down_note);
+            }
+        })
+    }
+
+    options.push({
+        text: "Create flip note from",
+        title: "Load this flip note into your editor",
+        run: () => {
+            save_locally(notes[current_drop_down_note]);
+            redir("create");
+        }
+    })
+
+    display_drop_down(pos.left, pos.top, options);
+}
+
+
+var drop_down_el;
+/**
+ * 
+ * @param {*} x 
+ * @param {*} y 
+ * @param {Option} options array of options, ex. of Option: {text: "Text", run: function(){CODE TO RUN}], color: "#color", title:"title"} 
+ */
+function display_drop_down(note_id, options){
+    if(drop_down_el){
+        drop_down_el.remove();
+        drop_down_el = false;
+    }
+
+    drop_down_el = document.createElement("div");
+    drop_down_el.classList.add("drop-down-menu");
+
+    console.log(drop_down_el.style)
+    document.body.appendChild(drop_down_el);
+}
 
 
 function generate_note_DOM(note) {
@@ -144,6 +195,12 @@ function generate_note_DOM(note) {
     var staff = "";
     if (note.uploader.staff) staff = get_tag("STAFF", "rgb(218, 30, 71)").outerHTML;
     title.innerHTML = sanitizeHTML(note.title) + "<span style='color:grey;cursor:pointer;' onclick='redir(" + '"' + "profile?" + note.uploader.username + '"' + ")'><br> by " + sanitizeHTML(note.uploader.username) + "</span>" + staff;
+
+    var drop_down_button = document.createElement("span");
+        drop_down_button.id = note.id;
+        drop_down_button.classList.add("drop-down-button")
+        drop_down_button.setAttribute("onclick", "drop_down(this)");
+        drop_down_button.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>';
 
     var star = document.createElement("span");
     star.id = note.id;
@@ -168,6 +225,7 @@ function generate_note_DOM(note) {
     flip_note_dom.appendChild(flip_image);
     flip_note_dom.appendChild(title);
 
+    flip_note_dom.appendChild(drop_down_button);
     flip_note_dom.appendChild(star);
     flip_note_dom.appendChild(x);
     flip_note_dom.appendChild(nr_likes);
