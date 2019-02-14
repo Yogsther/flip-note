@@ -53,13 +53,29 @@
             </div>
 
             <br>
-            <button onclick="clear_note()" id="delete" title="Clear flip note (all frames)"><svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/><path d="M0 0h24v24H0z" fill="none"/ ></svg></button>
+
+            <button onclick="undo()" id="undo" title="Undo draw [Z]"><img
+                src="img/icons/undo.png" alt="" class="icon"></button>
+
+            <button onclick="remove_transparent_parts()" id="remove_pixels" title="Remove all transparent pixels [R]"><img
+                    src="img/icons/remove_pixels.png" alt="" class="icon"></button>
+
+
             <button onclick="upload()" id="upload" title="Upload flip note to the site!"><img src="img/icons/save.png"
                     alt="" class="icon"></button>
+
+
+            <button onclick="clear_note()" id="delete" title="Clear flip note (all frames)"><svg xmlns="http://www.w3.org/2000/svg"
+                    class="icon" viewBox="0 0 24 24">
+                    <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" />
+                    <path d="M0 0h24v24H0z" fill="none" />
+                </svg></button>
+
+            <span id="save-satus"></span>
         </div>
 
     </div>
-    
+
     <script src="js/main.js"></script>
     <script src="js/creator.js"></script>
 

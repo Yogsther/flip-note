@@ -6,7 +6,7 @@ const SCALE = 3;
 var frame = -1;
 var pen = 1;
 var color = 0;
-var pen_size = 1;
+var pen_size = 0;
 var ghost = 1;
 var do_ghost = true;
 var playing = false;
@@ -19,23 +19,23 @@ var loaded_note;
 var load_index = 0;
 
 var canvas_arr = []
+var undo_history = [];
 
 var note = {
     content: [],
     palette: [
-        "black",
-        "white",
-        /*         "#f44242", */
-        "#fc3232",
-        "#ff5d00",
-        "#f4bb41",
-        "#61f441",
-        "#3c8e0f",
-        "#41bef4",
-        "#2f2fd8",
-        "#b841f4",
-        "#f4417f",
-        "#9b9b9b"
+        "rgba(0, 0, 0, 255)",
+        "rgba(155, 155, 155, 255)",
+        "rgba(255, 255, 255)",
+        "rgba(252, 50, 50, 255)",
+        "rgba(255, 93, 0, 255)",
+        "rgba(244, 187, 65, 255)",
+        "rgba(97, 244, 65, 255)",
+        "rgba(60, 142, 15, 255)",
+        "rgba(65, 190, 244, 255)",
+        "rgba(47, 47, 216, 255)",
+        "rgba(184, 65, 244, 255)",
+        "rgba(244, 65, 127, 255)",
     ]
 }
 
@@ -142,6 +142,7 @@ function new_frame(dont_save) {
 }
 
 function shift_frame(direction) {
+    undo_history = [];
     for (c of canvas_arr) c.style.visibility = "hidden";
     frame += direction;
     frame = frame % note.content.length;
@@ -182,8 +183,131 @@ canvas_bg.addEventListener("mousemove", e => {
     };
     mouse.x = Math.round((e.clientX - rect.left) / 3);
     mouse.y = Math.round((e.clientY - rect.top) / 3);
-    if (mouse.down) draw();
+    if (mouse.down){
+        draw();
+    }
+
 })
+
+
+var undo_img_load;
+function undo(){
+    if(undo_history.length > 0){
+            undo_img_load = new Image();
+            undo_img_load.src = undo_history[undo_history.length-1];
+            undo_img_load.onload = () => {
+                ctx.clearRect(0, 0, WIDTH, HEIGHT);
+                ctx.drawImage(undo_img_load, 0, 0);
+                undo_history.splice(undo_history.length-1, 1);
+            }
+    }
+    save_note();
+}
+
+function remove_transparent_parts() {
+    var data = ctx.getImageData(0, 0, canvas_arr[0].width, canvas_arr[0].height);
+    for (i = 3; i < data.data.length; i += 4) {
+        if(data.data[i] !== 0 && data.data[i] < 255) data.data[i] = 0;
+    }
+    ctx.putImageData(data, 0, 0);
+    save_note();
+}
+
+
+function frame_to_data() {
+    var data = ctx.getImageData(0, 0, canvas_arr[0].width, canvas_arr[0].height).data;
+    var rgb_data = [];
+    for (i = 0; i < data.length; i += 4) {
+        rgb_data.push("rgba(" + data[i] + ", " + data[i + 1] + ", " + data[i + 2] + ", " + data[i + 3] + ")");
+    }
+    return rgb_data;
+}
+
+function coordinates_to_index(x, y) {
+    return x + (canvas_arr[0].width * y);
+}
+
+
+/**
+ * Fill function
+ * Colors the neightbouring area of the same color.
+ * Right-click action.
+ */
+function fill() {
+    // Get origin variables
+    var origin = {
+        x: Math.floor(mouse.x),
+        y: Math.floor(mouse.y)
+    };
+    var painting = frame_to_data();
+    var replace_color = note.palette[color]; // Color to replace all connecting origin colors with
+    var origin_color = painting[coordinates_to_index(origin.x, origin.y)] // Origin color clicked on
+
+    ctx.fillStyle = replace_color;
+    ctx.fillRect(origin.x, origin.y, 1, 1);
+
+    // Don't fill if the two colors are the same, no reason to do so. Possibly a missclick from the user that would create an endless loop.
+    if (origin_color == replace_color) return;
+    // Set the origin block to the replacement color.
+    painting[coordinates_to_index(origin.x, origin.y)] = replace_color;
+
+    // Create a worker array with all blocks who could possibly neighbour a replacement block.
+    var workers = new Array();
+    // Push the initial origin block to check all neighbours.
+    workers.push({
+        x: origin.x,
+        y: origin.y
+    }); // Push the first block
+
+    // Loop through until the fill action is completed, aka all the workers are done.
+    while (workers.length > 0) {
+
+        // Check the first worker in line
+        checkWorker(workers[0]);
+    }
+
+    save_note();
+
+    /* setInterval((e) => {
+        if(workers.length > 0) checkWorker(workers[0]);
+    }, 0) */
+
+    function checkWorker(worker) {
+        var items = [];
+        // Check all neighbouring blocks to the item (worker).
+        items.push({
+            x: worker.x + 1,
+            y: worker.y
+        }); // Left 
+        items.push({
+            x: worker.x - 1,
+            y: worker.y
+        }); // Right
+        items.push({
+            x: worker.x,
+            y: worker.y + 1
+        }); // Bottom
+        items.push({
+            x: worker.x,
+            y: worker.y - 1
+        }); // Top
+        items.forEach(item => {
+            // Go through each item and check if it has the matching origin color, if that's the case - change it's color and put it into the worker array to check all it's neightbouring blocks. 
+            if (item.x <= canvas_arr[0].width-1 && item.y <= canvas_arr[0].height-1) {
+
+                var color = painting[coordinates_to_index(item.x, item.y)]
+                if (color == origin_color) {
+                    //painting[coordinatesToIndex(item.x, item.y)] = replace_color; // Replaced a block
+                    ctx.fillStyle = replace_color;
+                    ctx.fillRect(item.x, item.y, 1, 1);
+                    painting[coordinates_to_index(item.x, item.y)] = replace_color;
+                    workers.push(item); // Push that block to see if it has any neighbours for replacement.
+                }
+            }
+        })
+        workers.splice(0, 1); // Remove the first worker.
+    }
+}
 
 
 
@@ -203,6 +327,8 @@ function save_note() {
         flipnote.content.push(c.toDataURL());
     }
     save_locally(flipnote);
+    var date = new Date();
+    document.getElementById("save-satus").innerHTML = "Last save "  + date.getHours() + ":" + date.getMinutes();
 }
 
 
@@ -215,6 +341,7 @@ function load_next() {
         canvas_arr[load_index].getContext("2d").drawImage(temp_img, 0, 0);
         load_index++;
         if (load_index < loaded_note.content.length) load_next();
+        else frame_to_data();
     }
 }
 
@@ -267,7 +394,7 @@ function upload_message(message) {
     else if (type == "error") color = "#fc4655";
     else {
         clear_note(true);
-        redir("profile?"+me.username);
+        redir("profile?" + me.username);
     }
 
     var el = document.getElementById("status");
@@ -290,11 +417,13 @@ document.addEventListener("click", e => {
 
 canvas_bg.addEventListener("mousedown", e => {
     mouse.down = true;
+    undo_history.push(canvas_arr[frame].toDataURL());
     draw();
 })
 
 canvas_bg.addEventListener("mouseup", e => {
     mouse.down = false;
+    save_note();
 })
 canvas_bg.addEventListener("mouseleave", e => {
     mouse.down = false;
@@ -332,25 +461,43 @@ document.addEventListener("keypress", e => {
 window.onkeydown = function () {
     if (dont_shortcut()) return;
     var key = event.keyCode || event.charCode;
+    console.log(key)
     if (key == 8 || key == 46) {
         delete_frame();
     } else if (key == 37) {
         shift_frame(-1);
     } else if (key == 39) {
         shift_frame(1);
+    } else if (key == 70) {
+        fill();
+    } else if(key == 90){
+        undo();
+    } else if(key == 82){
+        remove_transparent_parts();
     }
 };
 
 function draw() {
-    for (i = 0; i < 20; i++) {
+    for (i = 0; i < pen_size - 1 || i == 0; i++) {
         ctx.beginPath();
         ctx.strokeStyle = note.palette[color];
         ctx.lineWidth = pen_size;
-        ctx.moveTo(mouse.last_pos.x, mouse.last_pos.y);
-        ctx.lineTo(mouse.x, mouse.y);
+        ctx.moveTo(mouse.last_pos.x+i, mouse.last_pos.y+i);
+        ctx.lineTo(mouse.x+i, mouse.y+i);
+        ctx.stroke();
+
+        ctx.moveTo(mouse.last_pos.x-i, mouse.last_pos.y-i);
+        ctx.lineTo(mouse.x-i, mouse.y-i);
+        ctx.stroke();
+
+        ctx.moveTo(mouse.last_pos.x-i, mouse.last_pos.y+i);
+        ctx.lineTo(mouse.x-i, mouse.y-i);
+        ctx.stroke();
+
+        ctx.moveTo(mouse.last_pos.x+i, mouse.last_pos.y-i);
+        ctx.lineTo(mouse.x-i, mouse.y-i);
         ctx.stroke();
     }
-    save_note()
 }
 
 function get_distance(x1, x2, y1, y2) {

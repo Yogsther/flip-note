@@ -239,14 +239,10 @@ img {
 
 #upload{
     display: inline-block;
-    position: absolute;
-    left: 60px;
 }
 
 #delete{
     display: inline-block;
-    position: absolute;
-    left: 0px;
 }
 
 #delete > svg {
@@ -570,4 +566,11 @@ img {
 .option:hover{
     color: white;
     background: rgb(48, 48, 48);
+}
+
+#save-satus{
+    color: white;
+    position: absolute;
+    right: 14px;
+    text-align: right;
 }
