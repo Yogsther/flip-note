@@ -17,17 +17,18 @@ Feed
     [X] Staff picks 
 
 More option (...) (Drop down menu)
-    Report
     [X] Pin [SELF] 
     [X] Delete [SELF OR STAFF] 
     [X] Staff pick [MOD] 
+    Report
 
 Editor
-    Add auto-save message when autosaving.
-    Add undo feature
+    [X] Add auto-save message when autosaving.
+    [X] Add undo feature
+    [X] Add paint bucket
     Add paste on-to layer
     Add thumbnails for nearby frames
-    Add paint bucket
+   
 
 About page 
     Suggestions link

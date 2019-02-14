@@ -82,7 +82,7 @@ setInterval(() => {
     logo_index++;
 }, 250)
 
-document.getElementById("feed").onscroll = function (ev) {
+if(at("home") || at("profile")) document.getElementById("feed").onscroll = function (ev) {
     if (drop_down_el) drop_down_el.remove();
 
     if (feed.scrollHeight - feed.clientHeight - feed.scrollTop < 600) {
@@ -101,7 +101,6 @@ document.getElementById("feed").onscroll = function (ev) {
 function star(el) {
     var star = el;
     var nr_likes = document.getElementById("likes_" + star.id);
-    console.log("likes_" + el.id)
     if (star.getAttribute("starred") == "true") {
         nr_likes.innerText = Number(nr_likes.innerText) - 1;
         star.setAttribute("starred", "false")
@@ -242,9 +241,9 @@ function generate_note_DOM(note) {
     flip_note_dom.classList.add("flip-note");
     flip_note_dom.style.borderBottomColor = theme;
 
-    if (note.pinned && at(note.uploader.username)) {
-        flip_note_dom.style.border = theme + " solid 5px";
-    }
+    /* if (note.pinned && at(note.uploader.username)) {
+        flip_note_dom.style.border = theme + " solid 1px";
+    } */
 
     var flip_image = document.createElement("img");
     flip_image.classList.add("flip-image");
@@ -261,7 +260,7 @@ function generate_note_DOM(note) {
     if (note.pinned && at(note.uploader.username)) pin = get_tag("PINNED").outerHTML;
     if (note.uploader.staff) staff = get_tag("STAFF").outerHTML;
 
-    title.innerHTML = sanitizeHTML(note.title) + "<span style='color:grey;cursor:pointer;' onclick='redir(" + '"' + "profile?" + note.uploader.username + '"' + ")'><br> by " + sanitizeHTML(note.uploader.username) + " " + Math.round((Date.now()-note.date)/60/60/24/1000) + "d</span>" + pick + pin + staff;
+    title.innerHTML = sanitizeHTML(note.title) + "<span style='color:grey;cursor:pointer;' onclick='redir(" + '"' + "profile?" + note.uploader.username + '"' + ")'><br> by " + sanitizeHTML(note.uploader.username) + " <span style='color:#595959;'>" + Math.round((Date.now()-note.date)/60/60/24/1000) + "d</span></span>" + pick + pin + staff;
 
     var drop_down_button = document.createElement("span");
     drop_down_button.id = note.id;

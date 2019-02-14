@@ -10,19 +10,12 @@
     <link href="https://fonts.googleapis.com/css?family=Bungee" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Ubuntu:700" rel="stylesheet">
-    <title>Home | Flip Note</title>
+    <link rel="stylesheet" href="css/profile.css">
+    <title>About | Flip Note</title>
 </head>
 <body>
     
     <div id="home-wrap">
-            <div id="extra-options">
-                    <span class="extra-button" onclick="get_feed('user_feed', this)">FOLLOWS</span>
-                    <span class="extra-button" onclick="get_feed('picked', this)">STAFF PICKS</span>
-                    <span class="extra-button" onclick="get_feed('top', this)">TOP</span>
-                    
-                    <span class="extra-button" onclick="get_feed('new', this)">NEW</span>
-                    <span class="extra-button" onclick="get_feed('old', this)">OLD</span>
-                </div>
         <div id="home-header">
             <img src="img/icons/logo_0.png" id="logo" alt="">
 
@@ -34,12 +27,21 @@
            
         </div>
 
-        <div class="feed" id="feed">
-            
+        <div id="info-board">
+
+            <span class="h">Server status</span>
+            <span class="t" id="server-status">Connecting...</span>
+
+            <span class="h">Learn more about the website</span>
+            <span class="t"><a href="https://github.com/Yogsther/flip-note/blob/master/README.md">Check out the README</a></span>
+
+            <span class="h">Submit a suggestion or bug</span>
+            <span class="t">Simply submit an issue on the <a href="https://github.com/Yogsther/flip-note/issues">Github</a></span>
+
         </div>
+
     </div>
 
     <script src="js/main.js"></script>
-    <script src="js/home.js"></script>
-</body>
+    <script src="js/home.js"></script></body>
 </html>

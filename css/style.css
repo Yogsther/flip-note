@@ -518,7 +518,7 @@ img {
     color: white;
     display: inline-block;
     top: 33px;
-    margin-right: 90px;
+    margin-right: 65px;
     font-size: 25px;
     position: relative;
     cursor: pointer;
@@ -573,4 +573,47 @@ img {
     position: absolute;
     right: 14px;
     text-align: right;
+}
+
+#info-board{
+    margin: 0 auto;
+    width: 90%;
+    height: 500px;
+    background: rgb(37, 37, 37);
+    top: 40px;
+    border-radius: 10px;
+    position: relative;
+}
+
+.h{
+    font-size: 20px;
+    color: white;
+    display: inline-block;
+    left: 5%;
+    width: 90%;
+    position: relative;
+    margin-top: 20px !important;
+
+
+}
+
+.t{
+    color: white;
+    font-size: 18px;
+    display: inline-block;
+    width: 90%;
+    left: 10%;
+    position: relative;
+    margin-top: 10px;
+}
+
+a{
+    color: white;
+}
+a:hover{
+    color: rgb(238, 238, 238);
+}
+
+a:visited{
+    color: white;
 }

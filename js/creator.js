@@ -461,7 +461,7 @@ document.addEventListener("keypress", e => {
 window.onkeydown = function () {
     if (dont_shortcut()) return;
     var key = event.keyCode || event.charCode;
-    console.log(key)
+    //console.log(key)
     if (key == 8 || key == 46) {
         delete_frame();
     } else if (key == 37) {

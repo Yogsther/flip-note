@@ -17,13 +17,12 @@ var palette = [
 if (!theme) theme = palette[0];
 
 function redir(to) {
-    if(location.href.indexOf("flip.livfor.it") == -1){
-        if(to.indexOf("?") != -1){
+    if (location.href.indexOf("flip.livfor.it") == -1) {
+        if (to.indexOf("?") != -1) {
             to = to.split("")
             to.splice(to.indexOf("?"), 0, ".html")
             to = to.join("");
-            console.log(to);
-        } else to+=".html"/* DISABLE FOR RELEASE */
+        } else to += ".html" /* DISABLE FOR RELEASE */
     }
     window.location.href = to;
 }
@@ -40,10 +39,11 @@ socket.on("reload", () => location.reload())
 
 function apply_theme() {
 
-    if (at("home") || at("profile")) {
+    if (at("home") || at("profile") || at("about")) {
+        if (at("about")) document.getElementById("info-board").style.background = pSBC(-.6, theme);
         document.getElementById("home-header").style.background = theme;
-        if(at("home")) document.getElementById("extra-options").style.background = pSBC(-.4, theme);
-        if (at("profile")) document.getElementById("profile-banner").style.background = pSBC(-.3, theme);  
+        if (at("home")) document.getElementById("extra-options").style.background = pSBC(-.4, theme);
+        if (at("profile")) document.getElementById("profile-banner").style.background = pSBC(-.3, theme);
     }
 
     if (at("index")) {
@@ -93,8 +93,8 @@ function get_tag(title, color) {
     var tag = document.createElement("div");
     tag.classList.add("tag");
     tag.innerText = title;
-    if(!color) tag.style.background = theme;
-        else tag.style.background = color;
+    if (!color) tag.style.background = theme;
+    else tag.style.background = color;
     return tag;
 }
 
@@ -116,6 +116,24 @@ socket.on("connect", () => {
         document.getElementById("status").innerText = "Connected.";
         document.getElementById("status").style.color = "#60ff4f";
     }
+    if (at("about")) {
+        socket.emit("uptime");
+    }
+})
+
+if(at("about")){
+    setTimeout(() => {
+        if(!socket.connected){
+            document.getElementById("server-status").innerHTML = "Failing to connect";
+            document.getElementById("server-status").style.color = "#f44141";
+        }
+    }, 2500);
+}
+
+socket.on("uptime", time => {
+    var date = new Date(time);
+    document.getElementById("server-status").innerHTML = "<div style='width:10px;height:10px;margin-right:5px;margin-bottom:1px;background:#60ff4f;border-radius:50px;display:inline-block;'></div>Online since " + date.getDate() + "/" + (date.getMonth()+1) + "/" + date.getFullYear() + ", " + Math.round((Date.now()-date)/60/60/24/1000) + " days.";
+    document.getElementById("server-status").style.color = "#60ff4f";
 })
 
 function login() {
@@ -147,7 +165,7 @@ socket.on("logged_in", info => {
     if (at("index")) {
         redir("home")
     }
-    if (at("home") || at("profile") || at("note")) {
+    if (at("home") || at("profile") || at("note") || at("about")) {
         document.getElementById("logged-in-status").innerText = me.username;
     }
 })
