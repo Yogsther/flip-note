@@ -29,8 +29,13 @@ Editor
     Add paste on-to layer
     Add thumbnails for nearby frames
    
+STAFF tools
+    [X] Limit accounts created per IP, about 3 account / IP / week
+    [X] Suspend accounts
+    [ ] Give others STAFF (Can remove anyones posts, can promote others to Staff or moderator, can indefinietly suspend users) [STAFF]
+    [ ] Give others MODERATOR (Can remove posts from non-moderators,can suspend users) [STAFF]
 
 About page 
-    Suggestions link
-    Tutorial of the site 
-    Uptime status
+    [X] Suggestions link 
+    [X] Uptime status
+    [x] Tutorial of the site

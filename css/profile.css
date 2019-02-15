@@ -64,6 +64,11 @@
     transform: scale(.95);
 }
 
+.feed{
+    top: -5px;
+    height: calc(100vh - 210px);
+}
+
 .theme-button{
     width: 20px;
     height: 20px;

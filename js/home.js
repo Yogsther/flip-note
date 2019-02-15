@@ -183,7 +183,30 @@ function drop_down(el) {
         })
     }
 
+    if (me.staff) {
+        options.push({
+            text: 'Suspend user',
+            title: "Suspend user, will hide all posts from the user.",
+            color: "#ff4444",
+            run: () => {
+                if (confirm("Are you sure you want to suspend this user?")) {
+                    socket.emit("suspend", {
+                        username: notes[current_drop_down_note].uploader.username,
+                        token: token
+                    })
+                }
+            }
+        })
+    }
+
     display_drop_down(pos.left + window.scrollX, pos.top + window.scrollY, note.id, options);
+}
+
+function suspend_user(username){
+    socket.emit("suspend", {
+        username: username,
+        token: token
+    })
 }
 
 

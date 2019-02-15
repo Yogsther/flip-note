@@ -63,7 +63,6 @@ function copy() {
 }
 
 function paste() {
-    new_frame();
     ctx.drawImage(copy_canvas, 0, 0);
 }
 
@@ -211,6 +210,15 @@ function remove_transparent_parts() {
     }
     ctx.putImageData(data, 0, 0);
     save_note();
+}
+
+function remove_white_pixels() {
+    var data = ctx.getImageData(0, 0, WIDTH, HEIGHT);
+    for (i = 0; i < data.data.length; i += 4) {
+        if(data.data[i] == 255 && data.data[i+1] == 255 && data.data[i+2] == 255/*  && data.data[i+3] == 255 */) data.data[i+3] = 0; 
+    }
+    ctx.clearRect(0, 0, WIDTH, HEIGHT);
+    ctx.putImageData(data, 0, 0);
 }
 
 
@@ -423,6 +431,7 @@ canvas_bg.addEventListener("mousedown", e => {
 
 canvas_bg.addEventListener("mouseup", e => {
     mouse.down = false;
+    remove_white_pixels();
     save_note();
 })
 canvas_bg.addEventListener("mouseleave", e => {

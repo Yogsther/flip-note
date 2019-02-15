@@ -6,11 +6,12 @@ get_feed("user_page");
 
 socket.on("profile", profile => {
     document.getElementById("title-username").innerText = profile.username;
-    document.getElementById("more-info").innerText = profile.notes + " notes, " + profile.followers + " followers, " + profile.stars + " stars"
+    if(!profile.suspended) document.getElementById("more-info").innerText = profile.notes + " notes, " + profile.followers + " followers, " + profile.stars + " stars"
+    else document.getElementById("more-info").innerText = "User suspended"
     username = profile.username;
     if(me.following.indexOf(username) != -1) following = true;
     if(following){
-        follow_button.style.color = "rgb(218, 30, 71)";
+        follow_button.style.color = theme;
         follow_button.style.background = "white";
         follow_button.innerText = "FOLLOWING"
     }   
@@ -41,7 +42,7 @@ function follow(){
         follow_button.style.background = "rgba(0,0,0,0)";
         follow_button.innerText = "FOLLOW"
     } else {
-        follow_button.style.color = "rgb(218, 30, 71)";
+        follow_button.style.color = theme;
         follow_button.style.background = "white";
         follow_button.innerText = "FOLLOWING"
     }

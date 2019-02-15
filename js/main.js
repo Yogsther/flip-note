@@ -1,5 +1,5 @@
-var socket = io.connect("nut.livfor.it:2008");
-//var socket = io.connect("localhost:2008");
+//var socket = io.connect("nut.livfor.it:2008");
+var socket = io.connect("localhost:2008");
 var loc = window.location.href.split("/").pop();
 var token = localStorage.getItem("token");
 var theme = localStorage.getItem("theme");
@@ -13,6 +13,8 @@ var palette = [
     "#dbdbdb",
     "#00aa16"
 ];
+
+if(!token && !at("index")) redir("index");
 
 if (!theme) theme = palette[0];
 
@@ -40,13 +42,14 @@ socket.on("reload", () => location.reload())
 function apply_theme() {
 
     if (at("home") || at("profile") || at("about")) {
-        if (at("about")) document.getElementById("info-board").style.background = pSBC(-.6, theme);
+        if (at("about")) document.getElementById("info-board").style.background = pSBC(-.4, theme);
         document.getElementById("home-header").style.background = theme;
         if (at("home")) document.getElementById("extra-options").style.background = pSBC(-.4, theme);
         if (at("profile")) document.getElementById("profile-banner").style.background = pSBC(-.3, theme);
     }
 
     if (at("index")) {
+        document.getElementsByClassName("login-window")[0].style.borderColor = theme;
         document.getElementsByClassName("login-title")[0].style.color = theme;
         document.getElementsByClassName("login-button")[0].style.background = theme;
     }
@@ -113,7 +116,7 @@ if (at("index")) {
 
 socket.on("connect", () => {
     if (at("index")) {
-        document.getElementById("status").innerText = "Connected.";
+        document.getElementById("status").innerHTML = "Connected";
         document.getElementById("status").style.color = "#60ff4f";
     }
     if (at("about")) {
@@ -168,6 +171,10 @@ socket.on("logged_in", info => {
     if (at("home") || at("profile") || at("note") || at("about")) {
         document.getElementById("logged-in-status").innerText = me.username;
     }
+})
+
+socket.on("suspended", () => {
+    if(!at("index")) redir("index");
 })
 
 socket.on("err", err => {
