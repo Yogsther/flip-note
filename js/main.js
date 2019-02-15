@@ -1,5 +1,5 @@
-//var socket = io.connect("nut.livfor.it:2008");
-var socket = io.connect("localhost:2008");
+var socket = io.connect("nut.livfor.it:2008");
+//var socket = io.connect("localhost:2008");
 var loc = window.location.href.split("/").pop();
 var token = localStorage.getItem("token");
 var theme = localStorage.getItem("theme");
