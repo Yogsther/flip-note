@@ -2,85 +2,98 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="css/style.css">
-    <link href="https://fonts.googleapis.com/css?family=Pacifico|Roboto+Mono" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-    <link rel="stylesheet" href="css/create.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
-    <link href="https://fonts.googleapis.com/css?family=Bungee" rel="stylesheet">
-    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
-    <link rel="stylesheet" media="screen and (max-device-width: 750px)" href="css/style_mobile.css" />
-    <title>Create | Flip Note</title>
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-118879212-3"></script>
+        <script>
+                window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-118879212-3');
+</script>
+
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link rel="stylesheet" href="css/style.css">
+        <link href="https://fonts.googleapis.com/css?family=Pacifico|Roboto+Mono" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+        <link rel="stylesheet" href="css/create.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
+        <link href="https://fonts.googleapis.com/css?family=Bungee" rel="stylesheet">
+        <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+        <link rel="stylesheet" media="screen and (max-device-width: 750px)" href="css/style_mobile.css" />
+        <title>Create | Flip Note</title>
 </head>
 
 <body>
 
-    <div class="studio-wrap">
-        <div id="save-popup">
-            <div class="text" max-le>Upload flip note!</div>
-            <input type="text" maxlength="32" placeholder="Title" id="upload-input" oninput="save_note()">
-            <button class="upload-button" onclick="upload_to_server()">Upload!</button>
-            <span id="status" class="upload-status"></span>
+        <div class="studio-wrap">
+                <div id="save-popup">
+                        <div class="text" max-le>Upload flip note!</div>
+                        <input type="text" maxlength="32" placeholder="Title" id="upload-input" oninput="save_note()">
+                        <button class="upload-button" onclick="upload_to_server()">Upload!</button>
+                        <span id="status" class="upload-status"></span>
+                </div>
+                <div id="canvas-background"></div>
+                <div id="canvas-hold"></div>
+                <div class="colors" id="colors"></div>
+
+                <div class="studio-buttons">
+                        <button onclick="toggle_brush()" title="Change brush size"><img src="img/icons/pen.png" alt=""
+                                        id="brush" class="icon"></button>
+                        <button onclick="new_frame()" title="Insert new frame [N]"><img src="img/icons/add.png" alt=""
+                                        class="icon"></button>
+                        <button onclick="delete_frame()" title="Delete frame [DEL]"><img src="img/icons/remove.png" alt=""
+                                        class="icon"></button>
+                        <button onclick="copy()" title="Copy frame [C]"><img src="img/icons/copy.png" alt="" class="icon"></button>
+
+                        <button onclick="paste()" title="Paste frame (and insert new frame) [V]"><img src="img/icons/paste.png"
+                                        alt="" class="icon"></button>
+
+                        <button onclick="toggle_ghost()" title="Toggle ghost (See through image of past frame)"><img
+                                        src="img/icons/ghost_1.png" id="ghost-img" alt="" class="icon"></button>
+                        <span class="title">FPS: </span> <input type="number" placeholder="fps" oninput="update_speed()"
+                                id="fps" value="12">
+
+                        <div class="playback">
+                                <span id="frame-status">1 / 1</span>
+                                <button onclick="shift_frame(-1)" title="Past frame [ARROW LEFT]"><img src="img/icons/arrow_left.png"
+                                                alt="" class="icon"></button>
+                                <button onclick="play()" title="Play [SPACEBAR]"><img src="img/icons/play.png" id="play-image"
+                                                class="icon" alt=""></button>
+                                <button onclick="shift_frame(1)" title="Next frame [ARROW RIGHT]"><img src="img/icons/arrow_right.png"
+                                                alt="" class="icon"></button>
+                        </div>
+
+                        <br>
+
+                        <button onclick="undo()" id="undo" title="Undo draw [Z]"><img src="img/icons/undo.png" alt=""
+                                        class="icon"></button>
+
+                        <button onclick="bucket_next()" id="paint_bucket" title="Use paint bucket on next click [F]"><img
+                                        src="img/icons/fill.png" alt="" class="icon"></button>
+
+                        <button onclick="remove_transparent_parts()" id="remove_pixels" title="Remove all transparent pixels [R]"><img
+                                        src="img/icons/remove_pixels.png" alt="" class="icon"></button>
+
+
+                        <button onclick="upload()" id="upload" title="Upload flip note to the site!"><img src="img/icons/save.png"
+                                        alt="" class="icon"></button>
+
+
+                        <button onclick="clear_note()" id="delete" title="Clear flip note (all frames)"><svg xmlns="http://www.w3.org/2000/svg"
+                                        class="icon" viewBox="0 0 24 24">
+                                        <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" />
+                                        <path d="M0 0h24v24H0z" fill="none" />
+                                </svg></button>
+
+                        <span id="save-satus"></span>
+                </div>
+
         </div>
-        <div id="canvas-background"></div>
-        <div id="canvas-hold"></div>
-        <div class="colors" id="colors"></div>
 
-        <div class="studio-buttons">
-            <button onclick="toggle_brush()" title="Change brush size"><img src="img/icons/pen.png" alt="" id="brush"
-                    class="icon"></button>
-            <button onclick="new_frame()" title="Insert new frame [N]"><img src="img/icons/add.png" alt="" class="icon"></button>
-            <button onclick="delete_frame()" title="Delete frame [DEL]"><img src="img/icons/remove.png" alt="" class="icon"></button>
-            <button onclick="copy()" title="Copy frame [C]"><img src="img/icons/copy.png" alt="" class="icon"></button>
-
-            <button onclick="paste()" title="Paste frame (and insert new frame) [V]"><img src="img/icons/paste.png" alt=""
-                    class="icon"></button>
-
-            <button onclick="toggle_ghost()" title="Toggle ghost (See through image of past frame)"><img src="img/icons/ghost_1.png"
-                    id="ghost-img" alt="" class="icon"></button>
-            <span class="title">FPS: </span> <input type="number" placeholder="fps" oninput="update_speed()" id="fps"
-                value="12">
-
-            <div class="playback">
-                <span id="frame-status">1 / 1</span>
-                <button onclick="shift_frame(-1)" title="Past frame [ARROW LEFT]"><img src="img/icons/arrow_left.png"
-                        alt="" class="icon"></button>
-                <button onclick="play()" title="Play [SPACEBAR]"><img src="img/icons/play.png" id="play-image" class="icon"
-                        alt=""></button>
-                <button onclick="shift_frame(1)" title="Next frame [ARROW RIGHT]"><img src="img/icons/arrow_right.png"
-                        alt="" class="icon"></button>
-            </div>
-
-            <br>
-
-            <button onclick="undo()" id="undo" title="Undo draw [Z]"><img src="img/icons/undo.png" alt="" class="icon"></button>
-
-            <button onclick="bucket_next()" id="paint_bucket" title="Use paint bucket on next click [F]"><img src="img/icons/fill.png"
-                    alt="" class="icon"></button>
-
-            <button onclick="remove_transparent_parts()" id="remove_pixels" title="Remove all transparent pixels [R]"><img
-                    src="img/icons/remove_pixels.png" alt="" class="icon"></button>
-
-
-            <button onclick="upload()" id="upload" title="Upload flip note to the site!"><img src="img/icons/save.png"
-                    alt="" class="icon"></button>
-
-
-            <button onclick="clear_note()" id="delete" title="Clear flip note (all frames)"><svg xmlns="http://www.w3.org/2000/svg"
-                    class="icon" viewBox="0 0 24 24">
-                    <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" />
-                    <path d="M0 0h24v24H0z" fill="none" />
-                </svg></button>
-
-            <span id="save-satus"></span>
-        </div>
-
-    </div>
-
-    <script src="js/main.js"></script>
-    <script src="js/creator.js"></script>
+        <script src="js/main.js"></script>
+        <script src="js/creator.js"></script>
 
 </body>
 

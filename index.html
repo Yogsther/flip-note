@@ -1,6 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-118879212-3"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-118879212-3');
+</script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -15,8 +26,9 @@
     <link rel="stylesheet" media="screen and (max-device-width: 750px)" href="css/style_mobile.css" />
     <title>Login or Signup | Flip Note</title>
 </head>
+
 <body>
-    
+
     <div class="login-window">
         <span class="login-title">Flip Note</span>
         <input type="text" placeholder="Username" id="username" maxlength="12" class="login-input" oninput="check()">
@@ -27,4 +39,5 @@
 
     <script src="js/main.js"></script>
 </body>
+
 </html>

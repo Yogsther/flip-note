@@ -1,6 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-118879212-3"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-118879212-3');
+    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -14,17 +28,18 @@
     <link rel="stylesheet" media="screen and (max-device-width: 750px)" href="css/style_mobile.css" />
     <title>Home | Flip Note</title>
 </head>
+
 <body>
-    
+
     <div id="home-wrap">
-            <div id="extra-options">
-                    <span class="extra-button" onclick="get_feed('user_feed', this)">FOLLOWS</span>
-                    <span class="extra-button" onclick="get_feed('picked', this)">PICKS</span>
-                    <span class="extra-button" onclick="get_feed('hot', this)">HOT</span>
-                    <span class="extra-button" onclick="get_feed('top', this)">TOP</span>
-                    <span class="extra-button" onclick="get_feed('new', this)">NEW</span>
-                    <span class="extra-button" onclick="get_feed('old', this)">OLD</span>
-                </div>
+        <div id="extra-options">
+            <span class="extra-button" onclick="get_feed('user_feed', this)">FOLLOWS</span>
+            <span class="extra-button" onclick="get_feed('picked', this)">PICKS</span>
+            <span class="extra-button" onclick="get_feed('hot', this)">HOT</span>
+            <span class="extra-button" onclick="get_feed('top', this)">TOP</span>
+            <span class="extra-button" onclick="get_feed('new', this)">NEW</span>
+            <span class="extra-button" onclick="get_feed('old', this)">OLD</span>
+        </div>
         <div id="home-header">
             <img src="img/icons/logo_0.png" id="logo" alt="">
 
@@ -33,15 +48,16 @@
             <span class="header-button" onclick="redir('about')">About</span>
             <span class="header-button" onclick="redir('create')">Create</span>
             <span class="header-button" onclick="redir('home')">Feed</span>
-           
+
         </div>
 
         <div class="feed" id="feed">
-            
+
         </div>
     </div>
 
     <script src="js/main.js"></script>
     <script src="js/home.js"></script>
 </body>
+
 </html>
