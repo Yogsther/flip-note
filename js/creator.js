@@ -105,7 +105,7 @@ function play() {
 
 var bucket = false;
 function bucket_next(){
-    bucket = true;
+    bucket = !bucket;
 }
 
 function clear_note(ask) {

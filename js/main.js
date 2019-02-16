@@ -171,6 +171,13 @@ socket.on("logged_in", info => {
     if (at("home") || at("profile") || at("note") || at("about")) {
         document.getElementById("logged-in-status").innerText = me.username;
     }
+    if(at("home")){
+        if (at("home") && me.following.length > 0) {
+            get_feed("user_feed", document.getElementsByClassName("extra-button")[0]);
+        } else {
+            get_feed("picked", document.getElementsByClassName("extra-button")[1]);
+        }
+    }
 })
 
 socket.on("suspended", () => {

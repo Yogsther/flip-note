@@ -619,3 +619,14 @@ a:hover{
 a:visited{
     color: white;
 }
+
+#online-status{
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    background: rgb(56, 56, 56);
+    border-radius: 100px;
+    top: 30px;
+    left: 40px;
+    position: relative;
+}

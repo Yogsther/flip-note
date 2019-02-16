@@ -17,6 +17,11 @@ socket.on("profile", profile => {
     }   
     document.title = username + " | Flip Note";
 
+    if(profile.online){
+        document.getElementById("online-status").title = "User is online";
+        document.getElementById("online-status").style.background = "#68f442";
+    } 
+    
     if(profile.username == me.username){
         document.getElementById("logged-in-status").innerText = "Logout";
         document.getElementById("logged-in-status").setAttribute("onclick", "logout()")

@@ -6,9 +6,6 @@ var username = "?";
 var notes = [];
 var sent_not_recived = false;
 
-if (at("home")) {
-    get_feed("user_feed", document.getElementsByClassName("extra-button")[0]);
-}
 
 function goto_profile() {
     redir("profile?" + me.username);
@@ -168,9 +165,15 @@ function drop_down(el) {
     }
 
     if (me.staff || me.username == note.uploader.username) {
+        var title = "Delete this note, this can only be restored by STAFF!"
+        var text = "Delete note";
+        if(note.deleted){
+            title = "Restore this note"
+            text = "Restore note";
+        }
         options.push({
-            text: 'Delete note',
-            title: "Delete this note, can't be undone.",
+            text: text,
+            title: title,
             color: "#ff4444",
             run: () => {
                 if (confirm("Are you sure you want to delete this note? This cannot be undone")) {
@@ -184,12 +187,18 @@ function drop_down(el) {
     }
 
     if (me.staff) {
+        var title = "Suspend user, will hide all user posts."
+        var text = "Suspend user";
+        if(note.uploader.suspended){
+            title = "Pardon user, will reshow all user posts."
+            text = "Pardon user";
+        }
         options.push({
-            text: 'Suspend user',
-            title: "Suspend user, will hide all posts from the user.",
+            text: text,
+            title: title,
             color: "#ff4444",
             run: () => {
-                if (confirm("Are you sure you want to suspend this user?")) {
+                if (confirm("Are you sure you sure?")) {
                     socket.emit("suspend", {
                         username: notes[current_drop_down_note].uploader.username,
                         token: token
@@ -283,8 +292,10 @@ function generate_note_DOM(note) {
     if (note.pinned && at(note.uploader.username)) pin = get_tag("PINNED").outerHTML;
     if (note.uploader.staff) staff = get_tag("STAFF").outerHTML;
 
-    title.innerHTML = sanitizeHTML(note.title) + "<span style='color:grey;cursor:pointer;' onclick='redir(" + '"' + "profile?" + note.uploader.username + '"' + ")'><br> by " + sanitizeHTML(note.uploader.username) + " <span style='color:#595959;'>" + Math.round((Date.now()-note.date)/60/60/24/1000) + "d</span></span>" + pick + pin + staff;
-
+    var deleted = "";
+    if(note.deleted) deleted = "<span style='color:" + theme + ";'>[DELETED]</span> "
+    title.innerHTML = deleted + sanitizeHTML(note.title) + "<span style='color:grey;cursor:pointer;' onclick='redir(" + '"' + "profile?" + note.uploader.username + '"' + ")'><br> by " + sanitizeHTML(note.uploader.username) + " <span style='color:#595959;'>" + Math.round((Date.now()-note.date)/60/60/24/1000) + "d</span></span>" + pick + pin + staff;
+    
     var drop_down_button = document.createElement("span");
     drop_down_button.id = note.id;
     drop_down_button.classList.add("drop-down-button")
