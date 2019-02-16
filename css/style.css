@@ -66,7 +66,7 @@ body {
     border-radius: 5px;
 }
 
-.btn:hover {
+.btn:§ver {
     transform: scale(1.1);
 }
 
@@ -277,6 +277,8 @@ img {
     top: 40px;
     position: relative;
 }
+
+
 
 #upload-input{
     border: none;

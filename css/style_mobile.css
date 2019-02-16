@@ -1,0 +1,28 @@
+
+body{
+    height: calc(100vw * 4);
+}
+
+.feed{
+    height: calc(100vw * 4);
+}
+
+button{
+    margin-top: 10px;
+}
+
+#fps{
+    top: 5px;
+}
+
+.title{
+    top: 5px;
+}
+
+#frame-status{
+    top: 5px;
+}
+
+#save-satus{
+    top: 70px;
+}

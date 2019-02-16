@@ -26,7 +26,7 @@ var note = {
     palette: [
         "rgba(0, 0, 0, 255)",
         "rgba(155, 155, 155, 255)",
-        "rgba(255, 255, 255)",
+        "rgba(255, 255, 255, 255)",
         "rgba(252, 50, 50, 255)",
         "rgba(255, 93, 0, 255)",
         "rgba(244, 187, 65, 255)",
@@ -103,8 +103,13 @@ function play() {
     }
 }
 
+var bucket = false;
+function bucket_next(){
+    bucket = true;
+}
+
 function clear_note(ask) {
-    if (ask || confirm("WAIT! Are you sure you want to delete this flip note? This will the entire animation!")) {
+    if (ask || confirm("WAIT! Are you sure you want to delete this flip note? This will delete the entire animation!")) {
         while (canvas_arr.length > 1) delete_frame();
         delete_frame();
         document.getElementById("upload-input").value = "";
@@ -174,19 +179,8 @@ function load_elements() {
     }
 }
 
-canvas_bg.addEventListener("mousemove", e => {
-    var rect = canvas_bg.getBoundingClientRect();
-    mouse.last_pos = {
-        x: mouse.x,
-        y: mouse.y
-    };
-    mouse.x = Math.round((e.clientX - rect.left) / 3);
-    mouse.y = Math.round((e.clientY - rect.top) / 3);
-    if (mouse.down){
-        draw();
-    }
 
-})
+
 
 
 var undo_img_load;
@@ -323,6 +317,7 @@ function upload() {
     if (uploading) return;
     if (document.getElementById("save-popup").style.transform == "scale(1)") document.getElementById("save-popup").style.transform = "scale(0)";
     else document.getElementById("save-popup").style.transform = "scale(1)";
+    document.getElementsByClassName("upload-button")[0].style.background = theme;
 }
 
 function save_note() {
@@ -437,16 +432,64 @@ function save_history(){
     undo_history.push(canvas_arr[frame].toDataURL());
 }
 
-canvas_bg.addEventListener("mousedown", e => {
+function mouse_down(e){
     mouse.down = true;
     save_history();
     draw();
-})
+    var rect = canvas_bg.getBoundingClientRect();
+    mouse.last_pos = {
+        x: mouse.x,
+        y: mouse.y
+    };
+    mouse.x = Math.round((e.clientX - rect.left) / 3);
+    mouse.y = Math.round((e.clientY - rect.top) / 3);
+}
 
-canvas_bg.addEventListener("mouseup", e => {
+function draw_move(e){
+    var rect = canvas_bg.getBoundingClientRect();
+    mouse.last_pos = {
+        x: mouse.x,
+        y: mouse.y
+    };
+    if(e.touches){
+        mouse.x = Math.round((e.touches[0].clientX - rect.left) / 3);
+        mouse.y = Math.round((e.touches[0].clientY - rect.top) / 3);
+    } else {
+        mouse.x = Math.round((e.clientX - rect.left) / 3);
+        mouse.y = Math.round((e.clientY - rect.top) / 3);
+    }
+    
+    if (mouse.down && mouse.last_pos.x){
+        draw();
+    }
+}
+
+function mouse_up(){
     mouse.down = false;
+    mouse.last_pos = {x: undefined, y: undefined}
     remove_white_pixels();
     save_note();
+}
+
+canvas_bg.addEventListener("mousemove", e => {
+    draw_move(e)
+})
+canvas_bg.addEventListener("touchmove", e => {
+    event.preventDefault();
+    mouse.down = true;
+    draw_move(e)
+})
+canvas_bg.addEventListener("touchstart", e => {
+    mouse_down(e);
+})
+canvas_bg.addEventListener("mousedown", e => {
+    mouse_down(e);
+})
+canvas_bg.addEventListener("mouseup", e => {
+    mouse_up(e)
+})
+canvas_bg.addEventListener("touchend", e => {
+    mouse_up(e);
 })
 canvas_bg.addEventListener("mouseleave", e => {
     mouse.down = false;
@@ -503,6 +546,12 @@ window.onkeydown = function () {
 };
 
 function draw() {
+    if(!mouse.last_pos.x || !mouse.last_pos.y) return;
+    if(bucket){
+        fill();
+        bucket = false;
+        return;
+    } 
     for (i = 0; i < pen_size - 1 || i == 0; i++) {
         ctx.beginPath();
         ctx.strokeStyle = note.palette[color];
