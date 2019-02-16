@@ -61,7 +61,7 @@ function set_theme(el) {
 var logo_index = 0;
 
 setInterval(() => {
-    document.getElementById("logo").src = "img/icons/logo_" + logo_index % 2 + ".png";
+    //document.getElementById("logo").src = "img/icons/logo_" + logo_index % 2 + ".png";
     if (!end) {
         var dots = "";
         for (i = 0; i < logo_index % 4; i++) dots += ".";
