@@ -50,7 +50,7 @@ function apply_theme() {
 
     if (at("index")) {
         document.getElementsByClassName("login-window")[0].style.borderColor = theme;
-        document.getElementsByClassName("login-title")[0].style.color = theme;
+        //document.getElementsByClassName("login-title")[0].style.color = theme;
         document.getElementsByClassName("login-button")[0].style.background = theme;
     }
 
