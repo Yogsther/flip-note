@@ -356,7 +356,7 @@ img {
     position: relative;
     border-radius: 10px;
     padding: 5px;
-    width: 79.7px;
+    width: 79.5px;
     top: 5px;
     text-align: center;
     margin-left: 6px;
@@ -577,10 +577,11 @@ img {
 #info-board{
     margin: 0 auto;
     width: 90%;
+    padding-top: 30px;
     height: 500px;
     background: rgb(37, 37, 37);
-    top: 40px;
-    border-radius: 10px;
+    top: 00px;
+    border-radius: 0px 0px 10px 10px;
     position: relative;
 }
 

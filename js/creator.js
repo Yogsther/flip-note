@@ -335,8 +335,18 @@ function save_note() {
         flipnote.content.push(c.toDataURL());
     }
     save_locally(flipnote);
+
+    /* Make sure hours or minutes that are < 10 are displayed with an extra zero infront! */
+    function check_zeros(str){
+        if(str < 10) str = "0"+str;
+        return str;
+    }
+
     var date = new Date();
-    document.getElementById("save-satus").innerHTML = "Last save "  + date.getHours() + ":" + date.getMinutes();
+    var hours = check_zeros(date.getHours());
+    var minutes = check_zeros(date.getMinutes());
+    document.getElementById("save-satus").innerHTML = "Last save "  + hours + ":" + minutes;
+    
 }
 
 
@@ -423,9 +433,13 @@ document.addEventListener("click", e => {
 })
 
 
+function save_history(){
+    undo_history.push(canvas_arr[frame].toDataURL());
+}
+
 canvas_bg.addEventListener("mousedown", e => {
     mouse.down = true;
-    undo_history.push(canvas_arr[frame].toDataURL());
+    save_history();
     draw();
 })
 
@@ -478,10 +492,12 @@ window.onkeydown = function () {
     } else if (key == 39) {
         shift_frame(1);
     } else if (key == 70) {
+        save_history();
         fill();
     } else if(key == 90){
         undo();
     } else if(key == 82){
+        save_history();
         remove_transparent_parts();
     }
 };
