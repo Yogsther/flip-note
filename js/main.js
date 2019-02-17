@@ -41,8 +41,8 @@ socket.on("reload", () => location.reload())
 
 function apply_theme() {
 
-    if (at("home") || at("profile") || at("about")) {
-        if (at("about")) document.getElementById("info-board").style.background = pSBC(-.4, theme);
+    if (at("home") || at("profile") || at("about") || at("users")) {
+        if (at("about") || at("users")) document.getElementById("info-board").style.background = pSBC(-.4, theme);
         document.getElementById("home-header").style.background = theme;
         if (at("home")) document.getElementById("extra-options").style.background = pSBC(-.4, theme);
         if (at("profile")) document.getElementById("profile-banner").style.background = pSBC(-.3, theme);
@@ -169,7 +169,7 @@ socket.on("logged_in", info => {
     if (at("index")) {
         redir("home")
     }
-    if (at("home") || at("profile") || at("note") || at("about")) {
+    if (at("home") || at("profile") || at("note") || at("about") || at("users")) {
         document.getElementById("logged-in-status").innerText = me.username;
     }
     if(at("home")){
