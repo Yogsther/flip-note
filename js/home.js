@@ -6,7 +6,6 @@ var username = "?";
 var notes = [];
 var sent_not_recived = false;
 
-
 function goto_profile() {
     redir("profile?" + me.username);
 }
@@ -136,6 +135,25 @@ function drop_down(el) {
                 });
             },
             title: "Pin this note to your profile"
+        })
+    }
+
+    if (note.uploader.username == me.username) {
+        var text = "Make private";
+        var title = "Make this note private, only you can see it (Not even STAFF)"
+        if(note.private){
+            text = "Make public";
+            title = "Make this note public, everyone can see it."
+        }
+        options.push({
+            text: text,
+            title: title,
+            run: () => {
+                socket.emit("private", {
+                    id: current_drop_down_note,
+                    token: token
+                });
+            }
         })
     }
 
@@ -294,7 +312,9 @@ function generate_note_DOM(note) {
 
     var deleted = "";
     if(note.deleted) deleted = "<span style='color:" + theme + ";'>[DELETED]</span> "
-    title.innerHTML = deleted + sanitizeHTML(note.title) + "<span style='color:grey;cursor:pointer;' onclick='redir(" + '"' + "profile?" + note.uploader.username + '"' + ")'><br> by " + sanitizeHTML(note.uploader.username) + " <span style='color:#595959;'>" + Math.round((Date.now()-note.date)/60/60/24/1000) + "d</span></span>" + pick + pin + staff;
+    var private = "";
+    if(note.private) private = "<span style='color:#f4b241;'>[PRIVATE] </span>"
+    title.innerHTML = private + deleted + sanitizeHTML(note.title) + "<span style='color:grey;cursor:pointer;' onclick='redir(" + '"' + "profile?" + note.uploader.username + '"' + ")'><br> by " + sanitizeHTML(note.uploader.username) + " <span style='color:#595959;'>" + Math.round((Date.now()-note.date)/60/60/24/1000) + "d</span></span>" + pick + pin + staff;
     
     var drop_down_button = document.createElement("span");
     drop_down_button.id = note.id;

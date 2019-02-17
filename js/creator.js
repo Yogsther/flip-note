@@ -377,7 +377,8 @@ function upload_to_server() {
         var flipnote = {
             title: document.getElementById("upload-input").value,
             fps: Number(document.getElementById("fps").value),
-            content: []
+            content: [],
+            private: document.getElementById("check-private").checked
         }
 
         for (c of canvas_arr) {

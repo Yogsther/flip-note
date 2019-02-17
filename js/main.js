@@ -104,7 +104,8 @@ function get_tag(title, color) {
 if (localStorage.getItem("token")) {
     socket.emit("login", {
         token_login: true,
-        token: localStorage.getItem("token")
+        token: localStorage.getItem("token"),
+        location: loc
     })
 }
 

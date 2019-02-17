@@ -32,6 +32,7 @@
                 <div id="save-popup">
                         <div class="text" max-le>Upload flip note!</div>
                         <input type="text" maxlength="32" placeholder="Title" id="upload-input" oninput="save_note()">
+                        <span id="private-upload-option">Private <input type="checkbox" id="check-private" title="You can change the private state after the upload."></span>
                         <button class="upload-button" onclick="upload_to_server()">Upload!</button>
                         <span id="status" class="upload-status"></span>
                 </div>

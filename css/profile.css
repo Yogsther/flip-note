@@ -18,7 +18,7 @@
     color: white;
     font-size: 30px;
     display: inline-block;
-    top: 30px;
+    top: 20px;
     left: 30px;
     position: relative;
 }
@@ -34,7 +34,7 @@
     position: relative;
     display: inline-block;
     color: rgb(228, 228, 228);
-    left: 60px;
+    left: 80px;
 }
 
 #follow-button{
@@ -78,4 +78,25 @@
 
 .theme-button:hover{
     transform: scale(1.1);
+}
+
+
+#rpc{
+    position: relative;
+    display: block;
+    left: 30px;
+    top: 25px;
+    color: rgba(255, 255, 255, 0.849);
+}
+
+
+#online-status{
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    background: rgb(56, 56, 56);
+    border-radius: 100px;
+    top: 20px;
+    left: 40px;
+    position: relative;
 }

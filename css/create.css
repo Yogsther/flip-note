@@ -32,3 +32,21 @@ input{
     -webkit-user-drag: text;
     -webkit-user-select: text;
 }
+
+
+#private-upload-option{
+    position: relative;
+    color: white;
+    top: 93px;
+    width: 80%;
+    font-size: 20px;
+    margin: 0 auto;
+    display: block;
+}
+
+#check-private{
+    zoom: 2;
+    cursor: pointer;
+    top: 3px;
+    position: relative;
+}
