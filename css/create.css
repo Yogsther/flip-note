@@ -27,14 +27,14 @@ canvas {
     -ms-user-select: none;
 }
 
-input{
+input {
     user-select: text;
     -webkit-user-drag: text;
     -webkit-user-select: text;
 }
 
 
-#private-upload-option{
+#private-upload-option {
     position: relative;
     color: white;
     top: 93px;
@@ -44,9 +44,33 @@ input{
     display: block;
 }
 
-#check-private{
+#check-private {
     zoom: 2;
     cursor: pointer;
     top: 3px;
     position: relative;
+}
+
+#dotted_brush_size {
+    -webkit-appearance: none;
+    background: rgb(138, 138, 138);
+    height: 5px;
+    top: -20px;
+    position: relative;
+    border-radius: 5px;
+}
+
+#dotted_brush_size::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 100px;
+    background: rgb(255, 255, 255);
+    cursor: pointer;
+    transition: .1s;
+}
+
+#dotted_brush_size::-webkit-slider-thumb:hover{
+    transform: scale(1.1);
 }

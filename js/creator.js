@@ -17,6 +17,7 @@ var uploading = false;
 var copy_canvas = 0;
 var loaded_note;
 var load_index = 0;
+var dotted_brush_size = 2;
 
 var canvas_arr = []
 var undo_history = [];
@@ -104,8 +105,20 @@ function play() {
 }
 
 var bucket = false;
-function bucket_next(){
+
+function toggle_bucket() {
     bucket = !bucket;
+    if (bucket) document.getElementById("paint_bucket").children[0].style.fill = theme;
+    else document.getElementById("paint_bucket").children[0].style.fill = "white";
+}
+
+var dotted_brush = false;
+
+function toggle_dotted_brush() {
+    if (bucket) toggle_bucket();
+    dotted_brush = !dotted_brush;
+    if (dotted_brush) document.getElementById("dotted_brush").children[0].style.fill = theme;
+    else document.getElementById("dotted_brush").children[0].style.fill = "white";
 }
 
 function clear_note(ask) {
@@ -184,15 +197,16 @@ function load_elements() {
 
 
 var undo_img_load;
-function undo(){
-    if(undo_history.length > 0){
-            undo_img_load = new Image();
-            undo_img_load.src = undo_history[undo_history.length-1];
-            undo_img_load.onload = () => {
-                ctx.clearRect(0, 0, WIDTH, HEIGHT);
-                ctx.drawImage(undo_img_load, 0, 0);
-                undo_history.splice(undo_history.length-1, 1);
-            }
+
+function undo() {
+    if (undo_history.length > 0) {
+        undo_img_load = new Image();
+        undo_img_load.src = undo_history[undo_history.length - 1];
+        undo_img_load.onload = () => {
+            ctx.clearRect(0, 0, WIDTH, HEIGHT);
+            ctx.drawImage(undo_img_load, 0, 0);
+            undo_history.splice(undo_history.length - 1, 1);
+        }
     }
     save_note();
 }
@@ -200,7 +214,7 @@ function undo(){
 function remove_transparent_parts() {
     var data = ctx.getImageData(0, 0, canvas_arr[0].width, canvas_arr[0].height);
     for (i = 3; i < data.data.length; i += 4) {
-        if(data.data[i] !== 0 && data.data[i] < 255) data.data[i] = 0;
+        if (data.data[i] !== 0 && data.data[i] < 255) data.data[i] = 0;
     }
     ctx.putImageData(data, 0, 0);
     save_note();
@@ -209,7 +223,7 @@ function remove_transparent_parts() {
 function remove_white_pixels() {
     var data = ctx.getImageData(0, 0, WIDTH, HEIGHT);
     for (i = 0; i < data.data.length; i += 4) {
-        if(data.data[i] == 255 && data.data[i+1] == 255 && data.data[i+2] == 255/*  && data.data[i+3] == 255 */) data.data[i+3] = 0; 
+        if (data.data[i] == 255 && data.data[i + 1] == 255 && data.data[i + 2] == 255 /*  && data.data[i+3] == 255 */ ) data.data[i + 3] = 0;
     }
     ctx.clearRect(0, 0, WIDTH, HEIGHT);
     ctx.putImageData(data, 0, 0);
@@ -295,7 +309,7 @@ function fill() {
         }); // Top
         items.forEach(item => {
             // Go through each item and check if it has the matching origin color, if that's the case - change it's color and put it into the worker array to check all it's neightbouring blocks. 
-            if (item.x <= canvas_arr[0].width-1 && item.y <= canvas_arr[0].height-1) {
+            if (item.x <= canvas_arr[0].width - 1 && item.y <= canvas_arr[0].height - 1) {
 
                 var color = painting[coordinates_to_index(item.x, item.y)]
                 if (color == origin_color) {
@@ -332,16 +346,16 @@ function save_note() {
     save_locally(flipnote);
 
     /* Make sure hours or minutes that are < 10 are displayed with an extra zero infront! */
-    function check_zeros(str){
-        if(str < 10) str = "0"+str;
+    function check_zeros(str) {
+        if (str < 10) str = "0" + str;
         return str;
     }
 
     var date = new Date();
     var hours = check_zeros(date.getHours());
     var minutes = check_zeros(date.getMinutes());
-    document.getElementById("save-satus").innerHTML = "Last save "  + hours + ":" + minutes;
-    
+    document.getElementById("save-satus").innerHTML = "Last save " + hours + ":" + minutes;
+
 }
 
 
@@ -429,11 +443,11 @@ document.addEventListener("click", e => {
 })
 
 
-function save_history(){
+function save_history() {
     undo_history.push(canvas_arr[frame].toDataURL());
 }
 
-function mouse_down(e){
+function mouse_down(e) {
     mouse.down = true;
     save_history();
     draw();
@@ -446,28 +460,31 @@ function mouse_down(e){
     mouse.y = Math.round((e.clientY - rect.top) / 3);
 }
 
-function draw_move(e){
+function draw_move(e) {
     var rect = canvas_bg.getBoundingClientRect();
     mouse.last_pos = {
         x: mouse.x,
         y: mouse.y
     };
-    if(e.touches){
+    if (e.touches) {
         mouse.x = Math.round((e.touches[0].clientX - rect.left) / 3);
         mouse.y = Math.round((e.touches[0].clientY - rect.top) / 3);
     } else {
         mouse.x = Math.round((e.clientX - rect.left) / 3);
         mouse.y = Math.round((e.clientY - rect.top) / 3);
     }
-    
-    if (mouse.down && mouse.last_pos.x){
+
+    if (mouse.down && mouse.last_pos.x) {
         draw();
     }
 }
 
-function mouse_up(){
+function mouse_up() {
     mouse.down = false;
-    mouse.last_pos = {x: undefined, y: undefined}
+    mouse.last_pos = {
+        x: undefined,
+        y: undefined
+    }
     remove_white_pixels();
     save_note();
 }
@@ -538,39 +555,67 @@ window.onkeydown = function () {
     } else if (key == 70) {
         save_history();
         fill();
-    } else if(key == 90){
+    } else if (key == 90) {
         undo();
-    } else if(key == 82){
+    } else if (key == 82) {
         save_history();
         remove_transparent_parts();
     }
 };
 
+function index_to_coordinates(index) {
+    let x = index % WIDTH;
+    let y = (index - x) / WIDTH;
+    return {
+        x: x,
+        y: y
+    };
+}
+
+function change_doted_size(el){
+    dotted_brush_size = el.value;
+}
+
 function draw() {
-    if(!mouse.last_pos.x || !mouse.last_pos.y) return;
-    if(bucket){
+    if (!mouse.last_pos.x || !mouse.last_pos.y) return;
+    if (bucket) {
         fill();
-        bucket = false;
+        toggle_bucket();
         return;
-    } 
+    }
+
+    if (dotted_brush) {
+        for (i = 0; i < WIDTH * HEIGHT; i++) {
+            var coords = index_to_coordinates(i);
+            if (coords.x % dotted_brush_size == 0 && coords.y % dotted_brush_size == 0) {
+                if (get_distance(coords.x, mouse.x, coords.y, mouse.y) < pen_size+4) {
+                    ctx.fillStyle = note.palette[color];
+                    ctx.fillRect(coords.x, coords.y, 1, 1);
+                }
+            }
+
+        }
+
+        return;
+    }
     for (i = 0; i < pen_size - 1 || i == 0; i++) {
         ctx.beginPath();
         ctx.strokeStyle = note.palette[color];
         ctx.lineWidth = pen_size;
-        ctx.moveTo(mouse.last_pos.x+i, mouse.last_pos.y+i);
-        ctx.lineTo(mouse.x+i, mouse.y+i);
+        ctx.moveTo(mouse.last_pos.x + i, mouse.last_pos.y + i);
+        ctx.lineTo(mouse.x + i, mouse.y + i);
         ctx.stroke();
 
-        ctx.moveTo(mouse.last_pos.x-i, mouse.last_pos.y-i);
-        ctx.lineTo(mouse.x-i, mouse.y-i);
+        ctx.moveTo(mouse.last_pos.x - i, mouse.last_pos.y - i);
+        ctx.lineTo(mouse.x - i, mouse.y - i);
         ctx.stroke();
 
-        ctx.moveTo(mouse.last_pos.x-i, mouse.last_pos.y+i);
-        ctx.lineTo(mouse.x-i, mouse.y-i);
+        ctx.moveTo(mouse.last_pos.x - i, mouse.last_pos.y + i);
+        ctx.lineTo(mouse.x - i, mouse.y - i);
         ctx.stroke();
 
-        ctx.moveTo(mouse.last_pos.x+i, mouse.last_pos.y-i);
-        ctx.lineTo(mouse.x-i, mouse.y-i);
+        ctx.moveTo(mouse.last_pos.x + i, mouse.last_pos.y - i);
+        ctx.lineTo(mouse.x - i, mouse.y - i);
         ctx.stroke();
     }
 }
