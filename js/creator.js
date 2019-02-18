@@ -115,7 +115,6 @@ function toggle_bucket() {
 var dotted_brush = false;
 
 function toggle_dotted_brush() {
-    if (bucket) toggle_bucket();
     dotted_brush = !dotted_brush;
     if (dotted_brush) document.getElementById("dotted_brush").children[0].style.fill = theme;
     else document.getElementById("dotted_brush").children[0].style.fill = "white";
@@ -250,6 +249,22 @@ function coordinates_to_index(x, y) {
  * Right-click action.
  */
 function fill() {
+
+    if(dotted_brush){
+        for (i = 0; i < WIDTH * HEIGHT; i++) {
+            var coords = index_to_coordinates(i);
+            if (coords.x % dotted_brush_size == 0 && coords.y % dotted_brush_size == 0) {
+               
+                    ctx.fillStyle = note.palette[color];
+                    ctx.fillRect(coords.x, coords.y, 1, 1);
+                
+            }
+
+        }
+        return;
+    }
+
+
     // Get origin variables
     var origin = {
         x: Math.floor(mouse.x),
