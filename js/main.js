@@ -1,6 +1,12 @@
-var socket = io.connect("nut.livfor.it:2008");
-//var socket = io.connect("localhost:2008");
+//var 
 var loc = window.location.href.split("/").pop();
+var socket;
+if(window.location.href.indexOf("livfor") == -1){
+    socket = io.connect("192.168.8.100:2008")
+} else {
+    socket = io.connect("nut.livfor.it:2008");
+}
+
 var token = localStorage.getItem("token");
 var theme = localStorage.getItem("theme");
 var palette = [
@@ -190,3 +196,11 @@ socket.on("err", err => {
     document.getElementById("status").innerText = err;
     document.getElementById("status").style.color = "#ff4f4f";
 })
+
+
+function get_time(time){
+    var days_ago = (Date.now() - time) / 1000 / 60 / 60  / 24;
+    if(Math.round(days_ago) > 0) return Math.round(days_ago) + "d"; // Return days
+    else if(Math.round(days_ago*24) > 0) return Math.round(days_ago*24) + "h"; // Return hours
+    else return Math.round(days_ago*24*60) + "m"; // Return minutes
+}

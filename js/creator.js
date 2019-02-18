@@ -18,11 +18,14 @@ var copy_canvas = 0;
 var loaded_note;
 var load_index = 0;
 var dotted_brush_size = 2;
+var audio;
+var note_loaded = false;
 
 var canvas_arr = []
 var undo_history = [];
 
 var note = {
+    audio: false,
     content: [],
     palette: [
         "rgba(0, 0, 0, 255)",
@@ -94,7 +97,19 @@ function play() {
         clearInterval(play_interval);
         do_ghost = true;
         shift_frame(0);
+        if (audio) {
+            audio.pause();
+        }
     } else {
+        if (audio) {
+            try{
+                audio.currentTime = (audio.duration / canvas_arr.length) * frame; // Set audio time to current frame
+            } catch(e){
+                shift_frame(-frame);
+            }
+            audio.play();
+            audio.loop = true;
+        }
         do_ghost = false;
         document.getElementById("play-image").src = "img/icons/pause.png";
         play_interval = setInterval(() => {
@@ -122,10 +137,17 @@ function toggle_dotted_brush() {
 
 function clear_note(ask) {
     if (ask || confirm("WAIT! Are you sure you want to delete this flip note? This will delete the entire animation!")) {
-        while (canvas_arr.length > 1) delete_frame();
-        delete_frame();
+        
+        note.content = [];
+        for(i = 0; i < canvas_arr.length; i++){
+            canvas_arr[i].remove();
+        }
+        canvas_arr = [];
+        frame = 0;
+        new_frame();
         document.getElementById("upload-input").value = "";
         document.getElementById("fps").value = 12;
+        audio = false;
         save_note();
     }
 }
@@ -157,11 +179,26 @@ function new_frame(dont_save) {
     if (!dont_save) save_note();
 }
 
-function shift_frame(direction) {
-    undo_history = [];
-    for (c of canvas_arr) c.style.visibility = "hidden";
+function shift_frame(direction, play_sound) {
     frame += direction;
     frame = frame % note.content.length;
+
+    if (play_sound && audio) {
+        audio.currentTime = (audio.duration / canvas_arr.length) * (frame); // Play from current frame
+        audio.play();
+        setTimeout(() => {
+            audio.pause();
+        }, (audio.duration / canvas_arr.length) * 1000);
+    }
+    
+    if(frame == 0 && audio){
+        audio.currentTime = 0;
+    }
+
+    undo_history = [];
+    for (c of canvas_arr) c.style.visibility = "hidden";
+    
+    
     if (frame < 0) frame = note.content.length - 1;
     document.getElementById("frame-status").innerHTML = (frame + 1) + " / " + note.content.length;
     canvas_arr[frame].style.visibility = "visible";
@@ -230,6 +267,7 @@ function remove_white_pixels() {
 
 
 function frame_to_data() {
+    note_loaded = true;
     var data = ctx.getImageData(0, 0, canvas_arr[0].width, canvas_arr[0].height).data;
     var rgb_data = [];
     for (i = 0; i < data.length; i += 4) {
@@ -250,14 +288,14 @@ function coordinates_to_index(x, y) {
  */
 function fill() {
 
-    if(dotted_brush){
+    if (dotted_brush) {
         for (i = 0; i < WIDTH * HEIGHT; i++) {
             var coords = index_to_coordinates(i);
             if (coords.x % dotted_brush_size == 0 && coords.y % dotted_brush_size == 0) {
-               
-                    ctx.fillStyle = note.palette[color];
-                    ctx.fillRect(coords.x, coords.y, 1, 1);
-                
+
+                ctx.fillStyle = note.palette[color];
+                ctx.fillRect(coords.x, coords.y, 1, 1);
+
             }
 
         }
@@ -350,10 +388,12 @@ function upload() {
 }
 
 function save_note() {
+    if(!note_loaded) return;
     var flipnote = {
         title: document.getElementById("upload-input").value,
         fps: Number(document.getElementById("fps").value),
-        content: []
+        content: [],
+        audio: note.audio
     }
     for (c of canvas_arr) {
         flipnote.content.push(c.toDataURL());
@@ -392,10 +432,11 @@ function load_locally_note() {
     loaded_note = localStorage.getItem("note");
     if (loaded_note) {
         loaded_note = JSON.parse(loaded_note)
+        note.audio = loaded_note.audio;
+        audio = new Audio(loaded_note.audio);
         document.getElementById("fps").value = loaded_note.fps;
         update_speed(true);
         document.getElementById("upload-input").value = loaded_note.title;
-
         load_next();
     }
 }
@@ -407,7 +448,8 @@ function upload_to_server() {
             title: document.getElementById("upload-input").value,
             fps: Number(document.getElementById("fps").value),
             content: [],
-            private: document.getElementById("check-private").checked
+            private: document.getElementById("check-private").checked,
+            audio: note.audio
         }
 
         for (c of canvas_arr) {
@@ -557,6 +599,49 @@ document.addEventListener("keypress", e => {
     }
 })
 
+function record() {
+
+    if (canvas_arr.length < 3) alert("You need at least 3 frames to record audio");
+    navigator.mediaDevices.getUserMedia({
+            audio: true
+        })
+        .then(stream => {
+            const media_recorder = new MediaRecorder(stream);
+            audio_chunks = [];
+            media_recorder.addEventListener("dataavailable", event => {
+                audio_chunks.push(event.data);
+            });
+
+            do_ghost = false; // Turn of ghost
+            shift_frame(-frame); // Go to the beginning of the flip
+
+            media_recorder.start(); // Start recording
+            document.getElementById("record").children[0].style.fill = theme;
+
+            media_recorder.addEventListener("stop", () => {
+                const audio_blob = new Blob(audio_chunks);
+
+                var reader = new FileReader();
+                reader.readAsDataURL(audio_blob);
+                reader.onloadend = () => {
+                    base64data = reader.result.split(",")[1];
+                    note.audio = "data:audio/wav;base64," + base64data; // Saved data.
+                    save_note();
+                    audio = new Audio(note.audio);
+                    document.getElementById("record").children[0].style.fill = "white";
+                }
+            });
+
+            play_interval = setInterval(() => {
+                if (frame == canvas_arr.length - 1) {
+                    media_recorder.stop();
+                    clearInterval(play_interval);
+                    do_ghost = true;
+                } else shift_frame(1);
+            }, speed);
+        });
+}
+
 window.onkeydown = function () {
     if (dont_shortcut()) return;
     var key = event.keyCode || event.charCode;
@@ -564,9 +649,9 @@ window.onkeydown = function () {
     if (key == 8 || key == 46) {
         delete_frame();
     } else if (key == 37) {
-        shift_frame(-1);
+        shift_frame(-1, true);
     } else if (key == 39) {
-        shift_frame(1);
+        shift_frame(1, true);
     } else if (key == 70) {
         save_history();
         fill();
@@ -587,7 +672,7 @@ function index_to_coordinates(index) {
     };
 }
 
-function change_doted_size(el){
+function change_doted_size(el) {
     dotted_brush_size = el.value;
 }
 
@@ -603,7 +688,7 @@ function draw() {
         for (i = 0; i < WIDTH * HEIGHT; i++) {
             var coords = index_to_coordinates(i);
             if (coords.x % dotted_brush_size == 0 && coords.y % dotted_brush_size == 0) {
-                if (get_distance(coords.x, mouse.x, coords.y, mouse.y) < pen_size+4) {
+                if (get_distance(coords.x, mouse.x, coords.y, mouse.y) < pen_size + 4) {
                     ctx.fillStyle = note.palette[color];
                     ctx.fillRect(coords.x, coords.y, 1, 1);
                 }

@@ -50,11 +50,32 @@ socket.on("feed", content => {
         feed.appendChild(generate_note_DOM(note));
     }
     feed.appendChild(loading_more);
+    play_audio(feed.children[0].children[3].id)
 });
 
 function set_theme(el) {
     localStorage.setItem("theme", el.style.background);
     location.reload();
+}
+
+var playing_audio = false;
+var audio_timed = false;
+var audio = new Audio();
+audio.loop = true;
+
+
+
+function play_audio(id) {
+    id = Number(id);
+    if (playing_audio == id) return;
+    audio.pause();
+    playing_audio = id;
+    var note = notes[id];
+    if (note.audio) {
+        audio_timed = false;
+        audio.src = note.audio;
+        audio.play();
+    }
 }
 
 var logo_index = 0;
@@ -78,8 +99,12 @@ setInterval(() => {
     logo_index++;
 }, 250)
 
-if(at("home") || at("profile")) document.getElementById("feed").onscroll = function (ev) {
+
+
+if (at("home") || at("profile")) document.getElementById("feed").onscroll = function (ev) {
     if (drop_down_el) drop_down_el.remove();
+
+    play_audio(feed.children[Math.round(feed.scrollTop / 505)].children[2].id);
 
     if (feed.scrollHeight - feed.clientHeight - feed.scrollTop < 600) {
         if (!end) {
@@ -141,7 +166,7 @@ function drop_down(el) {
     if (note.uploader.username == me.username) {
         var text = "Make private";
         var title = "Make this note private, only you can see it (Not even STAFF)"
-        if(note.private){
+        if (note.private) {
             text = "Make public";
             title = "Make this note public, everyone can see it."
         }
@@ -185,7 +210,7 @@ function drop_down(el) {
     if (me.staff || me.username == note.uploader.username) {
         var title = "Delete this note, this can only be restored by STAFF!"
         var text = "Delete note";
-        if(note.deleted){
+        if (note.deleted) {
             title = "Restore this note"
             text = "Restore note";
         }
@@ -207,7 +232,7 @@ function drop_down(el) {
     if (me.staff) {
         var title = "Suspend user, will hide all user posts."
         var text = "Suspend user";
-        if(note.uploader.suspended){
+        if (note.uploader.suspended) {
             title = "Pardon user, will reshow all user posts."
             text = "Pardon user";
         }
@@ -229,7 +254,7 @@ function drop_down(el) {
     display_drop_down(pos.left + window.scrollX, pos.top + window.scrollY, note.id, options);
 }
 
-function suspend_user(username){
+function suspend_user(username) {
     socket.emit("suspend", {
         username: username,
         token: token
@@ -311,11 +336,11 @@ function generate_note_DOM(note) {
     if (note.uploader.staff) staff = get_tag("STAFF").outerHTML;
 
     var deleted = "";
-    if(note.deleted) deleted = "<span style='color:" + theme + ";'>[DELETED]</span> "
+    if (note.deleted) deleted = "<span style='color:" + theme + ";'>[DELETED]</span> "
     var private = "";
-    if(note.private) private = "<span style='color:#f4b241;'>[PRIVATE] </span>"
-    title.innerHTML = private + deleted + sanitizeHTML(note.title) + "<span style='color:grey;cursor:pointer;' onclick='redir(" + '"' + "profile?" + note.uploader.username + '"' + ")'><br> by " + sanitizeHTML(note.uploader.username) + " <span style='color:#595959;'>" + Math.round((Date.now()-note.date)/60/60/24/1000) + "d</span></span>" + pick + pin + staff;
-    
+    if (note.private) private = "<span style='color:#f4b241;'>[PRIVATE] </span>"
+    title.innerHTML = private + deleted + sanitizeHTML(note.title) + "<span style='color:grey;cursor:pointer;' onclick='redir(" + '"' + "profile?" + note.uploader.username + '"' + ")'><br> by " + sanitizeHTML(note.uploader.username) + " <span style='color:#595959;'>" + Math.round((Date.now() - note.date) / 60 / 60 / 24 / 1000) + "d</span></span>" + pick + pin + staff;
+
     var drop_down_button = document.createElement("span");
     drop_down_button.id = note.id;
     drop_down_button.classList.add("drop-down-button")
@@ -351,8 +376,21 @@ function generate_note_DOM(note) {
     flip_note_dom.appendChild(nr_likes);
 
     var index = 0;
+    note.frame = index;
     setInterval(() => {
         flip_image.src = note.content[index % note.content.length];
+        note.frame = index % note.content.length
+        
+        if (note.audio && playing_audio == note.id) {
+            if (!audio_timed) {
+                try {
+                    audio.currentTime = (audio.duration / note.content.length) * note.frame;
+                    audio_timed = true;
+                } catch (e) {
+                    
+                }
+            } else if(note.frame == 0) audio.currentTime = 0;
+        }
         index++;
     }, (1 / note.fps) * 1000)
 
