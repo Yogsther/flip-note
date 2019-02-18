@@ -46,6 +46,7 @@ socket.on("feed", content => {
     feed_progress = content.progress;
     loading_more.remove();
     for (note of content.notes) {
+        if(notes[note.id]) clearInterval(notes[note.id].interval)
         notes[note.id] = note;
         feed.appendChild(generate_note_DOM(note));
     }
@@ -377,7 +378,7 @@ function generate_note_DOM(note) {
 
     var index = 0;
     note.frame = index;
-    setInterval(() => {
+    note.interval = setInterval(() => {
         flip_image.src = note.content[index % note.content.length];
         note.frame = index % note.content.length
         
