@@ -46,7 +46,7 @@ socket.on("feed", content => {
     feed_progress = content.progress;
     loading_more.remove();
     for (note of content.notes) {
-        if(notes[note.id]) clearInterval(notes[note.id].interval)
+        if (notes[note.id]) clearInterval(notes[note.id].interval)
         notes[note.id] = note;
         feed.appendChild(generate_note_DOM(note));
     }
@@ -64,15 +64,33 @@ var audio_timed = false;
 var audio = new Audio();
 audio.loop = true;
 
+function toggle_play(id){
+    var note = notes[id];
+    if(!note.audio) return;
+    if(!note.play) note.play = true;
+    else note.play = false; 
 
+    if(note.play){
+        play_audio(id);
+        note.audio_symbol.style.visibility = "hidden"
+    } else {
+        audio.pause();
+        note.audio_symbol.style.visibility = "visible"
+        playing_audio = -1;
+    }
+}
 
 function play_audio(id) {
     id = Number(id);
+    var note = notes[id];
+
     if (playing_audio == id) return;
     audio.pause();
-    playing_audio = id;
-    var note = notes[id];
-    if (note.audio) {
+    if(note.play) playing_audio = id;
+    else playing_audio = -1;
+    if(!note.play) return;
+
+    if (note.audio && note.play) {
         audio_timed = false;
         audio.src = note.audio;
         audio.play();
@@ -105,7 +123,7 @@ setInterval(() => {
 if (at("home") || at("profile")) document.getElementById("feed").onscroll = function (ev) {
     if (drop_down_el) drop_down_el.remove();
 
-    play_audio(feed.children[Math.round(feed.scrollTop / 505)].children[2].id);
+    play_audio(feed.children[Math.round(feed.scrollTop / 505)].id);
 
     if (feed.scrollHeight - feed.clientHeight - feed.scrollTop < 600) {
         if (!end) {
@@ -310,16 +328,17 @@ document.body.addEventListener("click", e => {
 })
 
 
-
 function generate_note_DOM(note) {
 
     var flip_note_dom = document.createElement("div");
     flip_note_dom.classList.add("flip-note");
+    flip_note_dom.id = note.id;
     flip_note_dom.style.borderBottomColor = theme;
 
     /* if (note.pinned && at(note.uploader.username)) {
         flip_note_dom.style.border = theme + " solid 1px";
     } */
+
 
     var flip_image = document.createElement("img");
     flip_image.classList.add("flip-image");
@@ -368,6 +387,21 @@ function generate_note_DOM(note) {
     nr_likes.id = "likes_" + note.id;
     nr_likes.innerText = " " + note.stars;
 
+    if (note.audio) {
+        note.audio_symbol = document.createElement("span");
+        note.audio_symbol.classList.add("audio-symbol");
+        note.audio_symbol.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="' + theme + '" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 3v9.28c-.47-.17-.97-.28-1.5-.28C8.01 12 6 14.01 6 16.5S8.01 21 10.5 21c2.31 0 4.2-1.75 4.45-4H15V6h4V3h-7z"/></svg>';
+        flip_note_dom.appendChild(note.audio_symbol)
+        flip_image.style.cursor = "pointer";
+        note.audio_symbol.onclick = (e) => {
+            toggle_play(note.id);
+        }
+    }
+
+    flip_image.onclick = (e) => {
+        toggle_play(note.id);
+    }
+
     flip_note_dom.appendChild(flip_image);
     flip_note_dom.appendChild(title);
 
@@ -376,21 +410,25 @@ function generate_note_DOM(note) {
     flip_note_dom.appendChild(x);
     flip_note_dom.appendChild(nr_likes);
 
+
+
+
     var index = 0;
     note.frame = index;
     note.interval = setInterval(() => {
         flip_image.src = note.content[index % note.content.length];
         note.frame = index % note.content.length
-        
+
         if (note.audio && playing_audio == note.id) {
+            if(audio.paused) audio.play();
             if (!audio_timed) {
                 try {
                     audio.currentTime = (audio.duration / note.content.length) * note.frame;
                     audio_timed = true;
                 } catch (e) {
-                    
+
                 }
-            } else if(note.frame == 0) audio.currentTime = 0;
+            } else if (note.frame == 0) audio.currentTime = 0;
         }
         index++;
     }, (1 / note.fps) * 1000)

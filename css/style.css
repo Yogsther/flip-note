@@ -97,8 +97,8 @@ canvas {
     position: absolute;
     pointer-events: none;
     image-rendering: pixelated;
-    user-select: none;
-    user-drag: none;
+    /* user-select: none;
+    user-drag: none; */
 }
 
 #ghost-canvas {
@@ -210,7 +210,7 @@ img {
     margin: 0 auto;
     display: block;
     position: absolute;
-    pointer-events: none;
+    /* pointer-events: none; */
     user-select: none;
 }
 
@@ -624,3 +624,21 @@ a:hover{
 a:visited{
     color: white;
 }
+
+
+.audio-symbol{
+    position: absolute;
+    top: 340px;
+    left: 470px;
+    z-index: 100;
+    animation: 2s zoom infinite ease-in-out;
+    cursor: pointer;
+}
+
+@keyframes zoom {
+    0% {transform: scale(1);}
+    50% {transform: scale(1.1);}
+    100% {transform: scale(1);}
+  }
+  
+  
