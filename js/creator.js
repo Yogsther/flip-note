@@ -101,7 +101,7 @@ function play() {
             audio.pause();
         }
     } else {
-        if (audio) {
+        if (audio && audio.src.length > 500) {
             try{
                 audio.currentTime = (audio.duration / canvas_arr.length) * frame; // Set audio time to current frame
             } catch(e){
@@ -183,7 +183,7 @@ function shift_frame(direction, play_sound) {
     frame += direction;
     frame = frame % note.content.length;
 
-    if (play_sound && audio) {
+    if (play_sound && audio && audio.src.length > 500) {
         audio.currentTime = (audio.duration / canvas_arr.length) * (frame); // Play from current frame
         audio.play();
         setTimeout(() => {

@@ -134,8 +134,10 @@ if (at("home") || at("profile")) document.getElementById("feed").onscroll = func
                 type: feed_type,
                 progress: feed_progress
             });
+            console.log(feed_progress)
         }
     }
+    
 };
 
 function star(el) {

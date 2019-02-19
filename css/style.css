@@ -628,10 +628,10 @@ a:visited{
 
 .audio-symbol{
     position: absolute;
-    top: 340px;
-    left: 470px;
+    top: 30px;
+    left: 30px;
     z-index: 100;
-    animation: 2s zoom infinite ease-in-out;
+    /* animation: 2s zoom infinite ease-in-out; */
     cursor: pointer;
 }
 
