@@ -1,11 +1,9 @@
 //var 
 var loc = window.location.href.split("/").pop();
-var socket;
-if(window.location.href.indexOf("livfor") == -1){
-    socket = io.connect("192.168.8.100:2008")
-} else {
-    socket = io.connect("nut.livfor.it:2008");
-}
+var socket = io.connect("nut.livfor.it:8080", {
+    secure: true,
+    rejectUnauthorized: false
+});
 
 var token = localStorage.getItem("token");
 var theme = localStorage.getItem("theme");
@@ -20,7 +18,7 @@ var palette = [
     "#00aa16"
 ];
 
-if(!token && !at("index")) redir("index");
+if (!token && !at("index")) redir("index");
 
 if (!theme) theme = palette[0];
 
@@ -131,9 +129,9 @@ socket.on("connect", () => {
     }
 })
 
-if(at("about")){
+if (at("about")) {
     setTimeout(() => {
-        if(!socket.connected){
+        if (!socket.connected) {
             document.getElementById("server-status").innerHTML = "Failing to connect";
             document.getElementById("server-status").style.color = "#f44141";
         }
@@ -142,7 +140,7 @@ if(at("about")){
 
 socket.on("uptime", time => {
     var date = new Date(time);
-    document.getElementById("server-status").innerHTML = "<div style='width:10px;height:10px;margin-right:5px;margin-bottom:1px;background:#60ff4f;border-radius:50px;display:inline-block;'></div>Online since " + date.getDate() + "/" + (date.getMonth()+1) + "/" + date.getFullYear() + ", " + Math.round((Date.now()-date)/60/60/24/1000) + " days.";
+    document.getElementById("server-status").innerHTML = "<div style='width:10px;height:10px;margin-right:5px;margin-bottom:1px;background:#60ff4f;border-radius:50px;display:inline-block;'></div>Online since " + date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear() + ", " + Math.round((Date.now() - date) / 60 / 60 / 24 / 1000) + " days.";
     document.getElementById("server-status").style.color = "#60ff4f";
 })
 
@@ -178,7 +176,7 @@ socket.on("logged_in", info => {
     if (at("home") || at("profile") || at("note") || at("about") || at("users")) {
         document.getElementById("logged-in-status").innerText = me.username;
     }
-    if(at("home")){
+    if (at("home")) {
         if (at("home") && me.following.length > 0) {
             get_feed("user_feed", document.getElementsByClassName("extra-button")[0]);
         } else {
@@ -188,7 +186,7 @@ socket.on("logged_in", info => {
 })
 
 socket.on("suspended", () => {
-    if(!at("index")) redir("index");
+    if (!at("index")) redir("index");
 })
 
 socket.on("err", err => {
@@ -198,9 +196,9 @@ socket.on("err", err => {
 })
 
 
-function get_time(time){
-    var days_ago = (Date.now() - time) / 1000 / 60 / 60  / 24;
-    if(Math.round(days_ago) > 0) return Math.round(days_ago) + "d"; // Return days
-    else if(Math.round(days_ago*24) > 0) return Math.round(days_ago*24) + "h"; // Return hours
-    else return Math.round(days_ago*24*60) + "m"; // Return minutes
+function get_time(time) {
+    var days_ago = (Date.now() - time) / 1000 / 60 / 60 / 24;
+    if (Math.round(days_ago) > 0) return Math.round(days_ago) + "d"; // Return days
+    else if (Math.round(days_ago * 24) > 0) return Math.round(days_ago * 24) + "h"; // Return hours
+    else return Math.round(days_ago * 24 * 60) + "m"; // Return minutes
 }
